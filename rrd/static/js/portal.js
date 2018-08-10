@@ -2,12 +2,12 @@
 function query_user() {
     var query = $.trim($("#query").val());
     var mine = document.getElementById('mine').checked ? 1 : 0;
-    window.location.href = '/portal/hostgroup?q=' + query + '&mine=' + mine;
+    window.location.href = '/hostgroup?q=' + query + '&mine=' + mine;
 }
 
 function create_hostgroup() {
     var name = $.trim($("#grp_name").val());
-    $.post('/portal/group/create', {'grp_name': name}, function (json) {
+    $.post('/group/create', {'grp_name': name}, function (json) {
         handle_quietly(json, function () {
             window.location.reload();
         });
@@ -16,7 +16,7 @@ function create_hostgroup() {
 
 function delete_hostgroup(group_id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.getJSON('/portal/group/delete/' + group_id, {}, function (json) {
+        $.getJSON('/group/delete/' + group_id, {}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -28,7 +28,7 @@ function delete_hostgroup(group_id) {
 
 function edit_hostgroup(group_id, grp_name) {
     layer.prompt({title: 'input new name:', val: grp_name, length: 255}, function (val, index, elem) {
-        $.post('/portal/group/update/' + group_id, {'new_name': val}, function (json) {
+        $.post('/group/update/' + group_id, {'new_name': val}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -39,7 +39,7 @@ function edit_hostgroup(group_id, grp_name) {
 function rename_hostgroup() {
     var old_str = $.trim($('#old_str').val());
     var new_str = $.trim($('#new_str').val());
-    $.post('/portal/group/rename', {'old_str': old_str, 'new_str': new_str}, function (json) {
+    $.post('/group/rename', {'old_str': old_str, 'new_str': new_str}, function (json) {
         handle_quietly(json, function () {
             window.location.href = '/?q=' + new_str;
         });
@@ -48,7 +48,7 @@ function rename_hostgroup() {
 
 function bind_plugin(group_id) {
     var plugin_idr = $.trim($("#plugin_dir").val());
-    $.post('/portal/plugin/bind', {'group_id': group_id, 'plugin_dir': plugin_idr}, function (json) {
+    $.post('/plugin/bind', {'group_id': group_id, 'plugin_dir': plugin_idr}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         });
@@ -57,7 +57,7 @@ function bind_plugin(group_id) {
 
 function unbind_plugin(plugin_id) {
     my_confirm('确定要解除绑定？', ['确定', '取消'], function () {
-        $.getJSON('/portal/plugin/delete/' + plugin_id, {}, function (json) {
+        $.getJSON('/plugin/delete/' + plugin_id, {}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -73,7 +73,7 @@ function query_host() {
     var query = $.trim($("#query").val());
     var limit = $("#limit").val();
     var maintaining = document.getElementById('maintaining').checked ? 1 : 0;
-    window.location.href = '/portal/group/' + group_id + '/hosts?q=' + query + '&maintaining=' + maintaining + '&limit=' + limit + '&xbox=' + xbox;
+    window.location.href = '/group/' + group_id + '/hosts?q=' + query + '&maintaining=' + maintaining + '&limit=' + limit + '&xbox=' + xbox;
 }
 
 function select_all() {
@@ -96,7 +96,7 @@ function remove_hosts() {
     }
 
     var group_id = $("#group_id").val();
-    $.post("/portal/host/remove", {'host_ids': ids.join(","), 'grp_id': group_id}, function (json) {
+    $.post("/host/remove", {'host_ids': ids.join(","), 'grp_id': group_id}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         });
@@ -126,7 +126,7 @@ function maintain() {
     var b = moment(begin, "YYYY-MM-DD HH:mm").unix();
     var e = moment(end, "YYYY-MM-DD HH:mm").unix();
 
-    $.post('/portal/host/maintain', {'begin': b, 'end': e, 'host_ids': ids.join(',')}, function (json) {
+    $.post('/host/maintain', {'begin': b, 'end': e, 'host_ids': ids.join(',')}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         });
@@ -145,7 +145,7 @@ function no_maintain() {
         return;
     }
 
-    $.post('/portal/host/reset', {'host_ids': ids.join(',')}, function (json) {
+    $.post('/host/reset', {'host_ids': ids.join(',')}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         });
@@ -159,7 +159,7 @@ function batch_add_host() {
         return false;
     }
 
-    $.post('/portal/host/add', {'group_id': $("#group_id").val(), 'hosts': hosts}, function (json) {
+    $.post('/host/add', {'group_id': $("#group_id").val(), 'hosts': hosts}, function (json) {
         if (json.msg.length > 0) {
             err_message_quietly(json.msg);
         } else {
@@ -169,7 +169,7 @@ function batch_add_host() {
 }
 
 function host_unbind_group(host_id, group_id) {
-    $.getJSON('/portal/host/unbind', {'host_id': host_id, 'group_id': group_id}, function (json) {
+    $.getJSON('/host/unbind', {'host_id': host_id, 'group_id': group_id}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         });
@@ -179,12 +179,12 @@ function host_unbind_group(host_id, group_id) {
 function query_expression() {
     var query = $.trim($("#query").val());
     var mine = document.getElementById('mine').checked ? 1 : 0;
-    window.location.href = '/portal/expression?q=' + query + '&mine=' + mine;
+    window.location.href = '/expression?q=' + query + '&mine=' + mine;
 }
 
 function delete_expression(id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.getJSON('/portal/expression/delete/' + id, {}, function (json) {
+        $.getJSON('/expression/delete/' + id, {}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -198,7 +198,7 @@ function update_expression() {
     var callback_url = $.trim($("#callback_url").val());
     var need_callback = callback_url.length > 0 ? 1 : 0;
     $.post(
-        '/portal/expression/update',
+        '/expression/update',
         {
             'expression': $.trim($("#expression").val()),
             'func': $.trim($("#func").val()),
@@ -227,7 +227,7 @@ function pause_expression(id) {
         // current: pause
         pause = '0'
     }
-    $.getJSON("/portal/expression/pause", {'id': id, 'pause': pause}, function (json) {
+    $.getJSON("/expression/pause", {'id': id, 'pause': pause}, function (json) {
         if (json.msg.length > 0) {
             err_message_quietly(json.msg);
         } else {
@@ -284,12 +284,12 @@ function make_select2_for_uic_group(selector) {
 function query_template() {
     var query = $.trim($("#query").val());
     var mine = document.getElementById('mine').checked ? 1 : 0;
-    window.location.href = '/portal/template?q=' + query + '&mine=' + mine;
+    window.location.href = '/template?q=' + query + '&mine=' + mine;
 }
 
 function delete_template(id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.getJSON('/portal/template/delete/' + id, {}, function (json) {
+        $.getJSON('/template/delete/' + id, {}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -301,11 +301,11 @@ function delete_template(id) {
 
 function create_template() {
     var tpl_name = $.trim($("#tpl_name").val());
-    $.post('/portal/template/create', {'name': tpl_name}, function (json) {
+    $.post('/template/create', {'name': tpl_name}, function (json) {
         if (json.msg.length > 0) {
             err_message_quietly(json.msg);
         } else {
-            location.href = '/portal/template/update/' + json.id;
+            location.href = '/template/update/' + json.id;
         }
     }, "json");
 }
@@ -390,7 +390,7 @@ function update_template() {
     var tpl_id = $('#tpl_id').val();
     var name = $.trim($("#name").val());
     var parent_id = $("#parent_id").val();
-    $.post('/portal/template/rename/' + tpl_id, {'name': name, 'parent_id': parent_id}, function (json) {
+    $.post('/template/rename/' + tpl_id, {'name': name, 'parent_id': parent_id}, function (json) {
         handle_quietly(json);
     }, "json");
 }
@@ -399,7 +399,7 @@ function save_action_for_tpl(tpl_id) {
     var callback_url = $.trim($("#callback_url").val());
     var need_callback = callback_url.length > 0 ? 1 : 0;
     $.post(
-            '/portal/template/action/update/' + tpl_id,
+            '/template/action/update/' + tpl_id,
         {
             'uic': $.trim($("#uic").val()),
             'url': callback_url,
@@ -422,7 +422,7 @@ function goto_strategy_add_div() {
 
 function save_strategy() {
     var sid = $("#current_sid").val();
-    $.post('/portal/strategy/update', {
+    $.post('/strategy/update', {
         'sid': sid,
         'metric': $.trim($("#metric").val()),
         'tags': $.trim($("#tags").val()),
@@ -455,7 +455,7 @@ function modify_strategy(sid) {
 function fill_fields(sid) {
     $("#add_div").show('fast');
     location.href = "#add";
-    $.getJSON('/portal/strategy/' + sid, {}, function (json) {
+    $.getJSON('/strategy/' + sid, {}, function (json) {
         $("#metric").val(json.data.metric);
         $("#tags").val(json.data.tags);
         $("#max_step").val(json.data.max_step);
@@ -472,7 +472,7 @@ function fill_fields(sid) {
 
 function delete_strategy(id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.getJSON('/portal/strategy/delete/' + id, {}, function (json) {
+        $.getJSON('/strategy/delete/' + id, {}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -484,7 +484,7 @@ function delete_strategy(id) {
 
 function tpl_unbind_group(tpl_id, grp_id) {
     my_confirm('确定要解除绑定关系？', ['确定', '取消'], function () {
-        $.getJSON('/portal/template/unbind/group', {'tpl_id': tpl_id, 'grp_id': grp_id}, function (json) {
+        $.getJSON('/template/unbind/group', {'tpl_id': tpl_id, 'grp_id': grp_id}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -495,18 +495,18 @@ function tpl_unbind_group(tpl_id, grp_id) {
 }
 
 function fork_template(tpl_id) {
-    $.getJSON('/portal/template/fork/' + tpl_id, {}, function (json) {
+    $.getJSON('/template/fork/' + tpl_id, {}, function (json) {
         if (json.msg.length > 0) {
             err_message_quietly(json.msg);
         } else {
-            location.href = '/portal/template/update/' + json.id;
+            location.href = '/template/update/' + json.id;
         }
     });
 }
 
 function bind_template(grp_id) {
     var tpl_id = $.trim($("#tpl_id").val());
-    $.getJSON('/portal/group/bind/template', {'grp_id': grp_id, 'tpl_id': tpl_id}, function (json) {
+    $.getJSON('/group/bind/template', {'grp_id': grp_id, 'tpl_id': tpl_id}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         })
@@ -515,7 +515,7 @@ function bind_template(grp_id) {
 
 function node_unbind_tpl(grp_name, tpl_id) {
     my_confirm('确定要解除绑定关系？', ['确定', '取消'], function () {
-        $.getJSON('/portal/template/unbind/node', {'tpl_id': tpl_id, 'grp_name': grp_name}, function (json) {
+        $.getJSON('/template/unbind/node', {'tpl_id': tpl_id, 'grp_name': grp_name}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -528,7 +528,7 @@ function node_unbind_tpl(grp_name, tpl_id) {
 function node_bind_tpl() {
     var node = $.trim($("#node").val());
     var tpl_id = $("#tpl_id").val();
-    $.post('/portal/template/bind/node', {'node': node, 'tpl_id': tpl_id}, function (json) {
+    $.post('/template/bind/node', {'node': node, 'tpl_id': tpl_id}, function (json) {
         handle_quietly(json, function () {
             location.reload();
         });
@@ -536,7 +536,7 @@ function node_bind_tpl() {
 }
 
 function create_cluster_monitor_metric(grp_id) {
-    $.post('/portal/group/' + grp_id + '/cluster/creator', {
+    $.post('/group/' + grp_id + '/cluster/creator', {
         'numerator': $("#numerator").val(),
         'denominator': $("#denominator").val(),
         'endpoint': $("#endpoint").val(),
@@ -545,13 +545,13 @@ function create_cluster_monitor_metric(grp_id) {
         'step': $("#step").val()
     }, function (json) {
         handle_quietly(json, function () {
-            location.href = "/portal/group/" + grp_id + "/cluster";
+            location.href = "/group/" + grp_id + "/cluster";
         });
     }, "json")
 }
 
 function update_cluster_monitor_metric(cluster_id, grp_id) {
-    $.post('/portal/cluster/edit/' + cluster_id, {
+    $.post('/cluster/edit/' + cluster_id, {
         'numerator': $("#numerator").val(),
         'denominator': $("#denominator").val(),
         'endpoint': $("#endpoint").val(),
@@ -566,7 +566,7 @@ function update_cluster_monitor_metric(cluster_id, grp_id) {
 
 function delete_cluster_monitor_item(cluster_id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.post('/portal/cluster/delete/' + cluster_id, {}, function (json) {
+        $.post('/cluster/delete/' + cluster_id, {}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             })
@@ -621,7 +621,7 @@ function alarm_case_batch_rm() {
     }
 
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.post('/portal/alarm-dash/case/delete', {"ids": ids.join(',')}, function (json) {
+        $.post('/alarm-dash/case/delete', {"ids": ids.join(',')}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -633,7 +633,7 @@ function alarm_case_batch_rm() {
 
 function alarm_case_rm(id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.post('/portal/alarm-dash/case/delete', {"ids": id}, function (json) {
+        $.post('/alarm-dash/case/delete', {"ids": id}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -645,7 +645,7 @@ function alarm_case_rm(id) {
 
 function alarm_case_event_rm(id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.post('/portal/alarm-dash/case/event/delete', {"ids": id}, function (json) {
+        $.post('/alarm-dash/case/event/delete', {"ids": id}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });
@@ -664,7 +664,7 @@ function alarm_case_event_batch_rm() {
     }
 
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
-        $.post('/portal/alarm-dash/case/event/delete', {"ids": ids.join(',')}, function (json) {
+        $.post('/alarm-dash/case/event/delete', {"ids": ids.join(',')}, function (json) {
             handle_quietly(json, function () {
                 location.reload();
             });

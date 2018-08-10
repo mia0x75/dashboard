@@ -77,5 +77,7 @@ def app_before():
         g.nav_menu = "p_nodata"
     elif path.startswith("/alarm-dash"):
         g.nav_menu = "p_alarm-dash"
+    elif path == "/":
+        g.nav_menu = "p_dashboard"
     else:
         g.nav_menu = ""
