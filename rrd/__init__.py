@@ -45,4 +45,15 @@ from view.auth import auth
 from view.user import user
 from view.team import team
 from view.dashboard import chart, screen
-from view.portal import *
+from view import alarm
+from view import alert_link
+from view import api
+from view import cluster
+from view import expression
+from view import group
+from view import home
+from view import host
+from view import nodata
+from view import plugin
+from view import strategy
+from view import template

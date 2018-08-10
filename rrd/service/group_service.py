@@ -16,7 +16,7 @@
 
 __author__ = 'Ulric Qin'
 from rrd.store import db
-from rrd.model.portal.host_group import HostGroup
+from rrd.model.host_group import HostGroup
 
 from rrd.utils.logger import logging
 log = logging.getLogger(__file__)
