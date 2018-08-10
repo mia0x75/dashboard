@@ -61,21 +61,21 @@ def app_before():
     path = request.path
     if not g.user and not path.startswith("/auth/login") and \
             not path.startswith("/static/") and \
-            not path.startswith("/portal/links/") and \
+            not path.startswith("/links/") and \
             not path.startswith("/auth/register"):
         return redirect("/auth/login")
 
     if path.startswith("/screen"):
         g.nav_menu = "nav_screen"
-    elif path.startswith("/portal/hostgroup") or path.startswith("/portal/group"):
+    elif path.startswith("/hostgroup") or path.startswith("/group"):
         g.nav_menu = "p_hostgroup"
-    elif path.startswith("/portal/template"):
+    elif path.startswith("/template"):
         g.nav_menu = "p_template"
-    elif path.startswith("/portal/expression"):
+    elif path.startswith("/expression"):
         g.nav_menu = "p_expression"
-    elif path.startswith("/portal/nodata"):
+    elif path.startswith("/nodata"):
         g.nav_menu = "p_nodata"
-    elif path.startswith("/portal/alarm-dash"):
+    elif path.startswith("/alarm-dash"):
         g.nav_menu = "p_alarm-dash"
     else:
         g.nav_menu = ""
