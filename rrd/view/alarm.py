@@ -13,9 +13,20 @@ def alarm_dash_case_get():
     endpoint_q = request.args.get("endpoint_q") or ""
     metric_q = request.args.get("metric_q") or ""
     status = request.args.get("status") or ""
+    from_date = request.args.get("from_date") or ""
+    to_date = request.args.get("to_date") or ""
 
-    cases, total = EventCase.query(page, limit, endpoint_q, metric_q, status)
-    return render_template("alarm/case.html", **locals())
+    if status:
+        limit = int(200)
+    # limit should be under control
+    if limit > 200:
+        limit = int(200)
+
+    cases, total = EventCase.query(page, limit, endpoint_q, metric_q, status, from_date, to_date)
+    if status == 'PROBLEM':
+        return render_template("alarm/case_problem.html", **locals())
+    else:
+        return render_template("alarm/case.html", **locals())
 
 @app.route("/alarm-dash/case/event")
 def alarm_dash_event_get():

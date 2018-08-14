@@ -43,3 +43,4 @@ def dashboard_before():
 
         g.limit = int(request.args.get("limit") or 0)
         g.page = int(request.args.get("page") or 0)
+        g.comp_date = int(request.args.get("comp_date") or 0)

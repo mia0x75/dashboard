@@ -43,6 +43,12 @@
                 minimumInputLength: 3
             });
 
+            //默认查询endpoint
+            fn_list_endpoints();
+            //选择endpoint之后自动刷新counters
+            $("#tbody-endpoints").delegate('.endpoint','click',function(){
+                setTimeout(fn_list_counters,100);
+            });
         })
 
 </script>

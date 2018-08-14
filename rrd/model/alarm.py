@@ -58,7 +58,7 @@ class EventCase(Bean):
         self.process_status = process_status
 
     @classmethod
-    def query(cls, page, limit, endpoint_query, metric_query, status):
+    def query(cls, page, limit, endpoint_query, metric_query, status, from_date, to_date):
         where = '1=1'
         params = []
         if status == "PROBLEM" or status == "OK":
@@ -72,6 +72,14 @@ class EventCase(Bean):
         if metric_query != "":
             where += ' and metric like %s'
             params.append('%' + metric_query + '%')
+
+        if from_date != "":
+            where += ' and timestamp >= %s'
+            params.append(from_date)
+
+        if to_date != "":
+            where += ' and timestamp <= %s'
+            params.append(to_date)
 
         vs = cls.select_vs(where=where, params=params, page=page, limit=limit, order='update_at desc')
         total = cls.total(where, params)

@@ -13,6 +13,7 @@ function MultiCtrl(FlotServ, $scope, $interval, $timeout) {
     vm.defaultGlobalParam = {
         start: '',
         end: '',
+        comp_date: '',
         cf: 'AVERAGE', // MIN, MAX
         graph_type: 'h', // h Endpoint视角; k Counter视角
         sum: 'off' // off
@@ -78,6 +79,9 @@ function MultiCtrl(FlotServ, $scope, $interval, $timeout) {
         if (angular.isDate(p.end)) {
             p.end = +p.end/1000;
         }
+        if (angular.isDate(p.comp_date)) {
+            p.comp_date = +p.comp_date/1000;
+        }
         FlotServ.getMultiDataById(p).then(function(ret) {
             // [{data: {}}, {data: {}}, {data: {}}]
             // console.log(ret);
@@ -131,6 +135,4 @@ function MultiCtrl(FlotServ, $scope, $interval, $timeout) {
         // vm.series = data2;
         // flot = $.plot(el, val, FlotServ.getConfig());
     }
-
-
 }

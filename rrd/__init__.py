@@ -2,6 +2,7 @@
 
 import os
 import traceback
+import logging
 from flask import Flask, request
 from flask.ext.babel import Babel, gettext
 from rrd import config
@@ -9,6 +10,7 @@ from rrd import config
 #-- create app --
 app = Flask(__name__)
 app.config.from_object("rrd.config")
+logging.getLogger('requests').setLevel(logging.ERROR)
 babel = Babel(app)
 
 @app.errorhandler(Exception)
@@ -43,3 +45,4 @@ from view import nodata
 from view import plugin
 from view import strategy
 from view import template
+from view import variable

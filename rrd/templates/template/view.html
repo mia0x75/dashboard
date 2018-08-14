@@ -30,7 +30,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">该模板中的策略列表</div>
         <div class="panel-body">
-            <div style="line-height: 35px;">
+            <div style="line-height: 35px;" class="hidden">
                 max: 最大报警次数 P：报警级别（&lt;3: 既发短信也发邮件 &gt;=3: 只发邮件） run：生效时间，不指定就是全天生效
             </div>
         </div>
@@ -39,8 +39,8 @@
             <tr>
                 <th>metric/<span class="text-success">tags</span><span class="gray"> [note]</span></th>
                 <th>condition</th>
-                <th>max</th>
-                <th>P</th>
+{#              <th>max</th>#}
+{#              <th>P</th>#}
                 <th>run</th>
             </tr>
             </thead>
@@ -54,8 +54,8 @@
                     <td>
                         {{ s.func }}{{ s.op }}{{ s.right_value }}
                     </td>
-                    <td>{{ s.max_step }}</td>
-                    <td>{{ s.priority }}</td>
+{#                  <td>{{ s.max_step }}</td>#}
+{#                  <td>{{ s.priority }}</td>#}
                     <td>{% if s.run_begin and s.run_end %}{{ s.run_begin }}-{{ s.run_end }}{% endif %}</td>
                 </tr>
             {% else %}
@@ -67,7 +67,7 @@
         </table>
     </div>
 
-    <div class="panel panel-warning">
+    <div class="panel panel-warning hidden">
         <div class="panel-heading">模板报警配置，对模板中的所有策略生效</div>
         <div class="panel-body">
 

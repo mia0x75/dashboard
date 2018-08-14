@@ -9,6 +9,7 @@ from rrd.model.template import Template
 from rrd.model.action import Action
 from rrd.model.host_group import HostGroup
 from rrd.model.host import Host
+from rrd.model.variable import Variable
 from rrd.model.expression import Expression
 from rrd.model.strategy import Strategy
 from rrd import corelib, config
@@ -143,3 +144,17 @@ def api_group_hosts_json(grp_name):
     names = [v.hostname for v in vs]
     return jsonify(msg='', data=names)
 
+@app.route('/api/host/<hostname>/variables', methods=['GET'])
+def api_host_variables(hostname):
+    host = Host.read(where='hostname = %s', params=[hostname])
+    if not host:
+        return jsonify(msg='no such host %s' % hostname)
+    groups_host = GroupHost.select_vs(where='host_id = %s' % host.id)
+    if not groups_host:
+        return jsonify(msg='the host %s has no group attribute' % hostname)
+    data = []
+    for gh in groups_host:
+        variables = Variable.select_vs(where='grp_id = %s' % gh.grp_id)
+        for v in variables:
+            data.append({'key': v.name, 'value': v.content, 'note': v.note})
+    return jsonify(msg='ok', data=data)

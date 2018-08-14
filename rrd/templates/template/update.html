@@ -40,7 +40,7 @@
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
             </div>
-            <div style="line-height: 35px;">
+            <div style="line-height: 35px;" class="hidden">
                 max: 最大报警次数 P：报警级别（&lt;3: 既发短信也发邮件 &gt;=3: 只发邮件） run：生效时间，不指定就是全天生效
             </div>
         </div>
@@ -49,8 +49,8 @@
             <tr>
                 <th>metric/<span class="text-success">tags</span><span class="gray"> [note]</span></th>
                 <th>condition</th>
-                <th>max</th>
-                <th>P</th>
+{#              <th>max</th>#}
+{#              <th>P</th>#}
                 <th>run</th>
                 <th>operation</th>
             </tr>
@@ -65,8 +65,8 @@
                     <td>
                         {{ s.func }}{{ s.op }}{{ s.right_value }}
                     </td>
-                    <td>{{ s.max_step }}</td>
-                    <td>{{ s.priority }}</td>
+{#                  <td>{{ s.max_step }}</td>#}
+{#                  <td>{{ s.priority }}</td>#}
                     <td>{% if s.run_begin and s.run_end %}{{ s.run_begin }}-{{ s.run_end }}{% endif %}</td>
                     <td>
                         <a href="javascript:clone_strategy('{{ s.id }}');" style="text-decoration: none;">
@@ -106,8 +106,10 @@
                 </div>
                 <div class="form-group">
                     tags: <input type="text" class="form-control" id="tags">
+                    <span class="hidden">
                     Max: <input class="form-control" id="max_step" style="width: 100px;" value="3">
                     P: <input class="form-control" id="priority" style="width: 60px;" value="0">
+                    </span>
                     note: <input class="form-control" id="note">
                 </div>
             </div>
@@ -145,7 +147,7 @@
     </div>
 
 
-    <div class="panel panel-warning">
+    <div class="panel panel-warning hidden">
         <div class="panel-heading">模板报警配置，对模板中的所有策略生效</div>
         <div class="panel-body">
 

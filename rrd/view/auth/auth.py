@@ -4,6 +4,8 @@ from flask import request, g, abort, render_template, redirect
 from flask.ext.babel import refresh
 import requests
 import json
+import string
+import random
 from rrd import app
 from rrd import config
 from rrd.model.user import User
@@ -11,6 +13,9 @@ from rrd.view import utils as view_utils
 
 from rrd.utils.logger import logging
 log = logging.getLogger(__file__)
+
+def id_generator(size=16, chars=string.ascii_uppercase + string.digits):
+   return ''.join(random.choice(chars) for _ in range(size))
 
 @app.route("/auth/login", methods=["GET", "POST"])
 def auth_login():
@@ -34,9 +39,8 @@ def auth_login():
         if ldap == "1":
             try:
                 ldap_info = view_utils.ldap_login_user(name, password)
-
-                h = {"Content-type":"application/json"}
-                d = {
+                password = id_generator()
+                user_info = {
                     "name": name,
                     "password": password,
                     "cnname": ldap_info['cnname'],
@@ -44,11 +48,17 @@ def auth_login():
                     "phone": ldap_info['phone'],
                 }
 
-                r = requests.post("%s/user/create" %(config.API_ADDR,), \
-                        data=json.dumps(d), headers=h)
-                log.debug("%s:%s" %(r.status_code, r.text))
-
-                #TODO: update password in db if ldap password changed
+                token = view_utils.get_api_token(config.API_USER, config.API_PASS)
+                ut = view_utils.admin_login_user(name, token)
+                if not ut:
+                    view_utils.create_user(user_info)
+                    ut = view_utils.admin_login_user(name, Apitoken)
+                    # if user not exist, create user , signup must be enabled
+                ret["data"] = {
+                    "name": ut.name,
+                    "sig": ut.sig,
+                }
+                return json.dumps(ret)
             except Exception as e:
                 ret["msg"] = str(e)
                 return json.dumps(ret)

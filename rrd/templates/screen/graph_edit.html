@@ -1,13 +1,33 @@
 {% extends "screen/base.html" %}
 
 {% block head_js %}
-{{super()}}
-<script>
-    $(document).ready(function(){
-    });
-</script>
+    {{ super() }}
+    <script>
+        function beforeSubmit() {
+            var vals = [], counters = [];
+            $('.endpoint-ckb:checked').each(function () {
+                vals.push($(this).val());
+            });
+            $('.counter-ckb:checked').each(function () {
+                counters.push($(this).val());
+            });
+            $('#hosts').val(vals.join('\n'));
+            $('#counters').val(counters.join(('\n')));
+            if (!vals.length) {
+                alert('必须选择endpoint');
+                return false;
+            } else if (!counters.length) {
+                alert('必须选择counter');
+                return false;
+            }
+            console.log(vals, counters);
+            return true;
+        }
+        $(document).ready(function () {
+        });
+    </script>
 
-{%endblock%}
+{% endblock %}
 
 {% block container %}
 

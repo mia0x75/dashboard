@@ -2,13 +2,18 @@
 
 # app config
 import os
-LOG_LEVEL = os.environ.get("LOG_LEVEL",'INFO')
+LOG_LEVEL = os.environ.get("LOG_LEVEL",'WARNING')
 SECRET_KEY = os.environ.get("SECRET_KEY","secret-key")
 PERMANENT_SESSION_LIFETIME = os.environ.get("PERMANENT_SESSION_LIFETIME",3600 * 24 * 30)
 SITE_COOKIE = os.environ.get("SITE_COOKIE","open-falcon-ck")
 
 # Falcon+ API
 API_ADDR = os.environ.get("API_ADDR","http://127.0.0.1:8080/api/v1")
+API_USER = os.environ.get("API_USER","admin")
+API_PASS = os.environ.get("API_PASS","password")
+
+#-- query config --
+QUERY_ADDR = "http://127.0.0.1:8080/api/v1"
 
 # portal database
 # TODO: read from api instead of db

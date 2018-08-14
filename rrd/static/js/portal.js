@@ -631,6 +631,12 @@ function alarm_case_batch_rm() {
     });
 }
 
+function alarm_case_batch_search() {
+    var endpoint_q = $("input[name='endpoint']").val();
+    var metric = $("input[name='metric']").val();
+    window.location.href = '/alarm-dash/case?status=PROBLEM&endpoint_q=' + endpoint_q + "&metric_q=" + metric;
+}
+
 function alarm_case_rm(id) {
     my_confirm('确定要删除？？？', ['确定', '取消'], function () {
         $.post('/alarm-dash/case/delete', {"ids": id}, function (json) {
@@ -672,4 +678,44 @@ function alarm_case_event_batch_rm() {
     }, function () {
         return false;
     });
+}
+function create_variable(grp_id) {
+    if (!$("#name").val() || !$("#content").val()) {
+        return false;
+    }
+    $.post('/group/' + grp_id + '/variable/creator', {
+        'name': $("#name").val(),
+        'content': $("#content").val(),
+        'note': $("#note").val()
+    }, function (json) {
+        handle_quietly(json, function () {
+            location.href = "/group/" + grp_id + "/variables";
+        });
+    }, "json")
+}
+function delete_variable(variable_id) {
+    my_confirm('确定要删除？？？', ['确定', '取消'], function () {
+        $.getJSON('/variable/delete/' + variable_id, {}, function (json) {
+            handle_quietly(json, function () {
+                location.reload();
+            });
+        });
+    }, function () {
+        return false;
+    });
+}
+function update_variable(variable_id, grp_id) {
+    if (!$("#name").val() || !$("#content").val()) {
+        return false;
+    }
+    $.post('/variable/edit/' + variable_id, {
+        'name': $("#name").val(),
+        'content': $("#content").val(),
+        'note': $("#note").val(),
+        'grp_id': grp_id
+    }, function (json) {
+        handle_quietly(json, function () {
+            location.href = "/group/" + grp_id + "/variables";
+        });
+    }, "json");
 }

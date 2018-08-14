@@ -6,27 +6,27 @@ function fn_list_endpoints()
     var page = $("#endpoint-page").val();
 
     $(".loading").show();
-    $.getJSON("/api/endpoints", {q: qs, tags: tags, limit:limit, page:page, _r:Math.random()}, function(ret){
-                $(".loading").hide();
-                if (!ret.ok) {
-                    err_message_quietly(ret.msg);
-                    return;
-                }
+    $.getJSON("/api/endpoints", {q: qs, tags: tags, limit: limit, page: page, _r:Math. random()}, function (ret) {
+        $(".loading").hide();
+        if (!ret.ok) {
+            err_message_quietly(ret.msg);
+            return;
+        }
 
-                // display_endpoints
-                var tbody_hosts = $("#tbody-endpoints");
-                tbody_hosts.html("");
-                for (var hidx in ret.data) {
-                    var h = ret.data[hidx].endpoint;
-                    var eid = ret.data[hidx].id;
-                    var line_html = '<tr>'
+        // display_endpoints
+        var tbody_hosts = $("#tbody-endpoints");
+        tbody_hosts.html("");
+        for (var hidx in ret.data) {
+            var h = ret.data[hidx].endpoint;
+            var eid = ret.data[hidx].id;
+            var line_html = '<tr>'
                     + '<td><input type="checkbox" class="input shiftCheckbox" data-eid="'+ eid +'"  data-fullname="'+ h +'"></input></td>'
                     + '<td>' + h + '</td>'
                     + '</tr>';
-                    tbody_hosts.append($(line_html));
-                    tbody_hosts.find('.shiftCheckbox').shiftcheckbox();
-                }
-                fn_check_all_hosts();
+            tbody_hosts.append($(line_html));
+            tbody_hosts.find('.shiftCheckbox').shiftcheckbox();
+        }
+        fn_check_all_hosts();
     }).error(function(req, ret, errorThrown){
         $(".loading").hide();
         err_message_quietly(req.statusText)
@@ -36,7 +36,7 @@ function fn_list_endpoints()
 function fn_list_counters(){
     var qs = $.trim($("#counter-search").val());
     var eids = new Array();
-    $("#tbody-endpoints input:checked").each(function(i, o){
+    $("#tbody-endpoints input:checked").each(function (i, o) {
         var eid = $(o).attr("data-eid");
         eids.push(eid);
     });
@@ -53,9 +53,9 @@ function fn_list_counters(){
         url: "/api/counters",
         dataType: "json",
         data: {"eids": JSON.stringify(eids), "q": qs, "limit": limit, "page":page, "_r": Math.random()},
-        success:function(ret){
+        success: function (ret) {
             $(".loading").hide();
-            if(ret.ok){
+            if (ret.ok) {
                 var items = ret.data;
                 // display counters
                 var tbody_items = $("#tbody-counters");
@@ -64,19 +64,19 @@ function fn_list_counters(){
                 for (var i in items) {
                     var c = items[i];
                     var display_counter_type = "计数器";
-                    if(c[1] == "GAUGE") {
+                    if (c[1] == "GAUGE") {
                         display_counter_type = "原始值";
                     }
                     var line_html = '<tr>'
-                    + '<td><input type="checkbox" class="input shiftCheckbox" data-fullkey="'+c[0]+'"></input></td>'
-                    + '<td><a href="javascript:void(0);" onclick="fn_show_chart(\'' + c[0] + '\')" >' + c[0] + '</a></td>'
-                    + '<td>'+ display_counter_type +'</td>'
-                    + '<td>'+ c[2] +'s</td>'
-                    + '</tr>'
+                        + '<td><input type="checkbox" class="input shiftCheckbox" data-fullkey="'+c[0]+'"></input></td>'
+                        + '<td><a href="javascript:void(0);" onclick="fn_show_chart(\'' + c[0] + '\')" >' + c[0] + '</a></td>'
+                        + '<td>'+ display_counter_type +'</td>'
+                        + '<td>'+ c[2] +'s</td>'
+                        + '</tr>'
                     tbody_items.append($(line_html));
                     tbody_items.find('.shiftCheckbox').shiftcheckbox();
                 }
-            }else{
+            } else {
                 err_message_quietly("搜索失败：" + ret.msg);
                 return false;
             }
@@ -86,29 +86,29 @@ function fn_list_counters(){
 
 function fn_delete_counters(){
     var checked_hosts = new Array();
-    $("#tbody-endpoints input:checked").each(function(i, o){
+    $("#tbody-endpoints input:checked").each(function (i, o) {
         if($(o).is(":visible")){
             var hostfullname = $(o).attr("data-fullname");
             checked_hosts.push(hostfullname);
         }
     });
-    if(checked_hosts.length === 0){
+    if (checked_hosts.length === 0) {
         err_message_quietly("先选endpoint：）");
         return false;
     }
 
     var checked_items = new Array();
     $("#tbody-counters input:checked").each(function(i, o){
-        if($(o).is(":visible")){
+        if ($(o).is(":visible")) {
             var key_ = $(o).attr("data-fullkey");
             checked_items.push(key_);
         }
     });
-    if (checked_items.length === 0){
+    if (checked_items.length === 0) {
         err_message_quietly("请选择counter");
         return false;
     }
-    if(checked_items.length > 10) {
+    if (checked_items.length > 10) {
         err_message_quietly("每次删除不能超过10个，免得你后悔:");
         return false;
     }

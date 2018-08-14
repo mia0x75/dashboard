@@ -27,6 +27,7 @@
             </span>
         </div>
       </div>
+      <input type="text" name="status" value="PROBLEM" hidden>
       <button type="submit" class="btn btn-default">Search</button>
         <script>
             $( function() {
@@ -42,66 +43,37 @@
         </script>
     </form>
     <br/>
-
     <div class="panel panel-danger">
         <div class="panel-heading">
             <h4 class="panel-title">{{_('alerting cases')}}
                 <a class="pull-right small" href="/alarm-dash/case?status=PROBLEM">{{_('not recovered cases')}}</a>
             </h4>
         </div>
-        <div class="panel-body" id="case-search">
-            <input name="endpoint" type="text" placeholder="endpoint"/> <input name="metric" type="text" placeholder="metric"/><button class="btn btn-warning btn-sm" onclick="alarm_case_batch_search();">查询</button>
-        </div>
         <div class="panel-body">
             <div class="alarms">
                 {%for case in cases%}
-                    {% if case.priority == 0 %}
-                <div class="alarm danger">
-                    {% elif case.priority < 3 %}
-                <div class="alarm attention">
-                    {% else %}
                 <div class="alarm">
-                    {% endif %}
-                    {% if case.status.startswith("OK") %}
                     <input type="checkbox" alarm="{{case.id}}">
-                    {% endif %}
                     {{case.status}} P{{case.priority}}
-
-                    {% if case.priority < 3 %}
-                        [第#{{case.current_step}}次/最大{{case.max_step}}次]
-                        {{case.timestamp|time_duration}}
-                        [
-                        <a href="/portal/template/view/{{case.template_id}}" target="_blank">template</a>
-                    {% else %}
-                        [第<span class="orange">#{{case.current_step}}</span>次/最大{{case.max_step}}次]
-                        <span class="orange">{{case.timestamp|time_duration}}</span>
-                        <span class="gray">[</span>
-                        <a href="/portal/template/view/{{case.template_id}}" target="_blank">template</a>
-                    {% endif %}
-
+                    [第<span class="orange">#{{case.current_step}}</span>次/最大{{case.max_step}}次]
+                    <span class="orange">{{case.timestamp}}</span>
+                    <span class="orange">{{case.timestamp|time_duration}}</span>
+                    <span class="gray">[</span>
+                    <a href="/template/view/{{case.template_id}}" target="_blank">template</a>
                     {%if case.strategy_id>0%}
                     <span class="cut-line">¦</span>
                     <a href="/strategy/{{case.strategy_id}}" target="_blank">strategy</a>
                     {%endif%}
-
                     {%if case.expression_id>0%}
                     <span class="cut-line">¦</span>
                     <a href="/expression/view/{{case.expression_id}}" target="_blank">expression</a>
                     {%endif%}
-
-                    {% if case.status.startswith("OK") %}
                     <span class="cut-line">¦</span>
                     <a href="javascript:alarm_case_rm('{{case.id}}');">delete</a>
-                    {% endif %}
                     <span class="cut-line">¦</span>
                     <a href="/alarm-dash/case/event?case_id={{case.id}}">{{_('event list')}}</a>
-                    {% if case.priority < 3 %}
-                        ]
-                    {% else %}
-                        <span class="gray">]</span>
-                    {% endif %}
+                    <span class="gray">]</span>
                     </br>
-
                     <span style="padding-left:17px;"> {{case.endpoint}} 
                         <span class="cut-line">¦</span> 
                         {{case.metric}}
@@ -110,11 +82,7 @@
                         <span class="cut-line">¦</span> 
                         {{case.cond}}</span>
                         <span class="cut-line">¦</span> 
-                        {% if case.priority < 3 %}
-                            note: {{case.note}}
-                        {% else %}
-                            <span class="gray">note: {{case.note}}</span>
-                        {% endif %}
+                        <span class="gray">note: {{case.note}}</span>
                 </div>
                 <hr>
                 {%endfor%}
@@ -123,20 +91,9 @@
                 <button class="btn btn-warning btn-sm" onclick="alarm_case_batch_rm();">{{_('batch delete')}}</button>
             </div>
         </div>
-
         {% import "blocks.html" as blocks %}
         <div class="pull-left">
-            {{ blocks.pager('/alarm-dash/case?status='+status, total, limit, page) }}
             {{ blocks.pager('/alarm-dash/case?status='+status+'&endpoint_q='+endpoint_q+'&metric_q='+metric_q+'&from_date='+from_date+'&to_date='+to_date, total, limit, page) }}
         </div>
-
     </div>
-<script type="text/javascript">
-    window.onload = function() {
-        var url = window.location.href;
-        if (url.indexOf("status=PROBLEM") == -1) {
-            document.getElementById("case-search").style.display="none"
-        }
-    }
-</script>
 {%endblock%}

@@ -12,13 +12,13 @@ from rrd import app
 from rrd.model.screen import DashboardScreen
 from rrd.model.graph import DashboardGraph
 from rrd import consts
-from rrd.utils.graph_urls import generate_graph_urls 
+from rrd.utils.graph_urls import generate_graph_urls
 from rrd import config
 
 @app.route("/screen", methods=["GET", "POST"])
 def dash_screens():
     top_screens = DashboardScreen.gets_by_pid(pid='0') or []
-    top_screens = sorted(top_screens, key=lambda x:x.name)
+    top_screens = sorted(top_screens, key=lambda x: x.name)
 
     return render_template("screen/index.html", **locals())
 
@@ -40,7 +40,7 @@ def dash_screen_edit(sid):
     if request.method == "POST":
         screen_name = request.form.get("screen_name")
         screen.update(name=screen_name)
-        return redirect("/screen/%s" %screen.id)
+        return redirect("/screen/%s" % screen.id)
     else:
         return render_template("screen/edit.html", **locals())
 
@@ -62,9 +62,9 @@ def dash_screen_clone(sid):
             old_graphs = DashboardGraph.gets_by_screen_id(sid)
             for o in old_graphs:
                 DashboardGraph.add(o.title, o.hosts, o.counters, new_s.id,
-                        o.timespan, o.graph_type, o.method, o.position)
+                                   o.timespan, o.graph_type, o.method, o.position)
 
-        return redirect("/screen/%s" %new_s.id)
+        return redirect("/screen/%s" % new_s.id)
     else:
         return render_template("screen/clone.html", **locals())
 
@@ -82,7 +82,7 @@ def dash_screen(sid):
     end = request.args.get("end")
 
     top_screens = DashboardScreen.gets_by_pid(pid=0)
-    top_screens = sorted(top_screens, key=lambda x:x.name)
+    top_screens = sorted(top_screens, key=lambda x: x.name)
 
     screen = DashboardScreen.get(sid)
     if not screen:
@@ -90,12 +90,12 @@ def dash_screen(sid):
 
     if str(screen.pid) == '0':
         sub_screens = DashboardScreen.gets_by_pid(pid=sid)
-        sub_screens = sorted(sub_screens, key=lambda x:x.name)
+        sub_screens = sorted(sub_screens, key=lambda x: x.name)
         return render_template("screen/top_screen.html", **locals())
 
     pscreen = DashboardScreen.get(screen.pid)
     sub_screens = DashboardScreen.gets_by_pid(pid=screen.pid)
-    sub_screens = sorted(sub_screens, key=lambda x:x.name)
+    sub_screens = sorted(sub_screens, key=lambda x: x.name)
     graphs = DashboardGraph.gets_by_screen_id(screen.id)
 
     all_graphs = []
@@ -103,7 +103,7 @@ def dash_screen(sid):
     for graph in graphs:
         all_graphs.extend(generate_graph_urls(graph, start, end) or [])
 
-    all_graphs = sorted(all_graphs, key=lambda x:x.position)
+    all_graphs = sorted(all_graphs, key=lambda x: (x.position, x.id))
 
     return render_template("screen/screen.html", **locals())
 
@@ -125,7 +125,7 @@ def dash_screen_embed(sid):
     for graph in graphs:
         all_graphs.extend(generate_graph_urls(graph, start, end) or [])
 
-    all_graphs = sorted(all_graphs, key=lambda x:x.position)
+    all_graphs = sorted(all_graphs, key=lambda x: (x.position, x.id))
 
     return render_template("screen/screen_embed.html", **locals())
 
@@ -175,7 +175,7 @@ def dash_graph_add(sid):
         position = int(request.form.get("position", 0))
 
         graph = DashboardGraph.add(title, hosts, counters, sid,
-                timespan, graph_type, method, position)
+                                   timespan, graph_type, method, position)
         return redirect("/screen/%s" % sid)
 
     else:
@@ -220,7 +220,7 @@ def dash_graph_edit(gid):
         position = request.form.get("position", 0)
 
         graph = graph.update(title, hosts, counters, screen_id,
-                timespan, graph_type, method, position)
+                             timespan, graph_type, method, position)
 
         error = gettext("edit successful")
         if not ajax:
@@ -235,9 +235,9 @@ def dash_graph_edit(gid):
 @app.route("/graph/multi_edit", methods=["GET", "POST"])
 def dash_graph_multi_edit():
     ret = {
-            "ok": False,
-            "msg": "",
-            "data": [],
+        "ok": False,
+        "msg": "",
+        "data": [],
     }
     if request.method == "POST":
         d = request.data
@@ -248,17 +248,17 @@ def dash_graph_multi_edit():
 
         if not jdata:
             return json.dumps({
-                    "ok": False,
-                    "msg": "no_data_post",
+                "ok": False,
+                "msg": "no_data_post",
             })
         rows = []
         for x in jdata:
             rows.append({"id": x["id"], "hosts": x["endpoints"], "counters": x["counters"]})
-        DashboardGraph.update_multi(rows) 
+        DashboardGraph.update_multi(rows)
 
         return json.dumps({
-             "ok": True,
-             "msg": "",
+            "ok": True,
+            "msg": "",
         })
         
     elif request.method == "GET":
@@ -269,6 +269,6 @@ def dash_graph_multi_edit():
         
         ret["ok"] = True
         graphs = DashboardGraph.gets_by_screen_id(sid)
-        ret['data'] = [{"id": x.id, "title": x.title, "endpoints":x.hosts, "counters":x.counters} for x in graphs]
+        ret['data'] = [{"id": x.id, "title": x.title, "endpoints": x.hosts, "counters": x.counters} for x in graphs]
         return json.dumps(ret)
     
