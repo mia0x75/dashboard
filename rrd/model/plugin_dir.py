@@ -13,4 +13,3 @@ class PluginDir(Bean):
         self.grp_id = grp_id
         self.dir = plugin_dir
         self.create_user = create_user
-

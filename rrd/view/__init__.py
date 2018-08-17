@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import datetime
 import time
@@ -13,6 +13,7 @@ def fmt_time_filter(value, pattern="%Y-%m-%d %H:%M"):
         return ''
     return datetime.datetime.fromtimestamp(value).strftime(pattern)
 
+
 @app.template_filter('time_duration')
 def time_duration(v):
     d = time.time() - time.mktime(v.timetuple())
@@ -20,7 +21,7 @@ def time_duration(v):
     if d <= 60:
         return "just now"
     if d <= 120:
-            return "1 minute ago"
+        return "1 minute ago"
     if d <= 3600:
         return "%d minutes ago" % (d/60)
     if d <= 7200:
@@ -32,11 +33,13 @@ def time_duration(v):
 
     return "%d days ago" % (d/3600/24)
 
+
 @app.teardown_request
 def app_teardown(exception):
     from rrd.store import db, alarm_db
     db.commit()
     alarm_db.commit()
+
 
 @app.before_request
 def app_before():
@@ -63,6 +66,8 @@ def app_before():
         g.nav_menu = "p_nodata"
     elif path.startswith("/alarm-dash"):
         g.nav_menu = "p_alarm-dash"
+    elif path.startswith("/metric"):
+        g.nav_menu = "p_metric"
     elif path == "/":
         g.nav_menu = "p_dashboard"
     else:

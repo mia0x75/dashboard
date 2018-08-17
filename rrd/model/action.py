@@ -2,6 +2,7 @@
 
 from .bean import Bean
 
+
 class Action(Bean):
     _tbl = 'action'
     _cols = 'id, uic, url, callback, ' \
@@ -10,7 +11,7 @@ class Action(Bean):
     def __init__(self, _id, uic, url, callback,
                  before_callback_sms, before_callback_mail, after_callback_sms, after_callback_mail):
         self.id = _id
-        self.uic = uic  ##teams_name
+        self.uic = uic  # teams_name
         self.url = url
         self.callback = callback
         self.before_callback_sms = before_callback_sms

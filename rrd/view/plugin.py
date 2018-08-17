@@ -26,7 +26,8 @@ def plugin_bind_post():
     if not group:
         return jsonify(msg='no such group %s' % group_id)
 
-    PluginDir.insert({'grp_id': group_id, 'dir': plugin_dir, 'create_user': g.user.name})
+    PluginDir.insert({'grp_id': group_id, 'dir': plugin_dir,
+                      'create_user': g.user.name})
     return jsonify(msg='')
 
 
@@ -38,4 +39,3 @@ def plugin_delete_get(plugin_id):
         return jsonify(msg='no such plugin dir %s' % plugin_id)
     PluginDir.delete_one(plugin_id)
     return jsonify(msg='')
-

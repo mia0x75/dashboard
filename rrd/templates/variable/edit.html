@@ -1,31 +1,30 @@
-{% extends "layout.html" %}
-{% block content %}
-    <div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                {{ op }}监控参数
-            </div>
-            <div class="panel-body">
-                {% include "variable/note.html" %}
-                <div role="form">
-                    <div class="form-group">
-                        <label for="name">name:</label>
-                        <input type="text" class="form-control" id="name" value="{{ variable.name }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="content">content:</label>
-                        <input type="text" class="form-control" id="content" value="{{ variable.content }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="note">说明:</label>
-                        <input type="text" class="form-control" id="note" value="{{ variable.note }}">
-                    </div>
-                    <button class="btn btn-success" onclick="update_variable('{{ variable_id }}', '{{ variable.grp_id }}');">
-                        <span class="glyphicon glyphicon-floppy-disk"></span>
-                        {{ op }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+{% extends "layout.html" %} {% block content %}
+<div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			{{ op }}监控参数
+		</div>
+		<div class="panel-body">
+			{% include "variable/note.html" %}
+			<div role="form">
+				<div class="form-group">
+					<label for="name">name:</label>
+					<input type="text" class="form-control" id="name" value="{{ variable.name }}">
+				</div>
+				<div class="form-group">
+					<label for="content">content:</label>
+					<input type="text" class="form-control" id="content" value="{{ variable.content }}">
+				</div>
+				<div class="form-group">
+					<label for="note">说明:</label>
+					<input type="text" class="form-control" id="note" value="{{ variable.note }}">
+				</div>
+				<button class="btn btn-success" onclick="update_variable('{{ variable_id }}', '{{ variable.grp_id }}');">
+					<span class="glyphicon glyphicon-floppy-disk"></span>
+					{{ op }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}

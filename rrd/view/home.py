@@ -8,12 +8,13 @@ from rrd.model.host_group import HostGroup
 from rrd.utils.logger import logging
 log = logging.getLogger(__file__)
 
-@app.route('/hostgroup', methods=["GET",])
+
+@app.route('/hostgroup', methods=["GET", ])
 def home_get():
     page = int(request.args.get('p', 1))
     limit = int(request.args.get('limit', 10))
     query = request.args.get('q', '').strip()
-    mine = request.args.get('mine', '1')
+    mine = request.args.get('mine', '0')
     me = g.user.name if mine == '1' else None
     vs, total = HostGroup.query(page, limit, query, me)
     log.debug(vs)
@@ -29,4 +30,3 @@ def home_get():
             'is_root': g.user.name in config.MAINTAINERS,
         }
     )
-

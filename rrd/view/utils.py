@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import json
 import requests
@@ -6,7 +6,7 @@ from flask import g, redirect, session, abort, request
 
 from functools import wraps
 
-from rrd import config 
+from rrd import config
 from rrd import corelib
 from rrd.utils import randbytes
 from rrd.model.user import User, UserToken
@@ -14,11 +14,13 @@ from rrd.model.user import User, UserToken
 from rrd.utils.logger import logging
 log = logging.getLogger(__file__)
 
+
 def remote_ip():
     if not request.headers.getlist("X-Forward-For"):
         return request.remote_addr
     else:
         return request.headers.getlist("X-Forward-For")[0]
+
 
 def require_login(redir="/auth/login"):
     def _(f):
@@ -30,6 +32,7 @@ def require_login(redir="/auth/login"):
         return __
     return _
 
+
 def require_login_abort(status_code=403, msg="login first"):
     def _(f):
         @wraps(f)
@@ -40,7 +43,8 @@ def require_login_abort(status_code=403, msg="login first"):
         return __
     return _
 
-def require_login_json(json_msg={"ok":False, "msg":"login first"}):
+
+def require_login_json(json_msg={"ok": False, "msg": "login first"}):
     def _(f):
         @wraps(f)
         def __(*a, **kw):
@@ -50,13 +54,16 @@ def require_login_json(json_msg={"ok":False, "msg":"login first"}):
         return __
     return _
 
+
 def set_user_cookie(user_token, session_):
     if not user_token:
         return None
     session_[config.SITE_COOKIE] = "%s:%s" % (user_token.name, user_token.sig)
 
+
 def clear_user_cookie(session_):
     session_[config.SITE_COOKIE] = ""
+
 
 def get_usertoken_from_session(session_):
     if config.SITE_COOKIE in session_:
@@ -67,40 +74,45 @@ def get_usertoken_from_session(session_):
         name, sig = cookies.split(":")
         return UserToken(name, sig)
 
+
 def get_current_user_profile(user_token):
     if not user_token:
-        return 
+        return
 
     h = {"Content-type": "application/json"}
-    r = corelib.auth_requests("GET", "%s/user/current" %config.API_ADDR, headers=h)
+    r = corelib.auth_requests("GET", "%s/user/current" %
+                              config.API_ADDR, headers=h)
     if r.status_code != 200:
         return
 
     j = r.json()
     return User(j["id"], j["name"], j["cnname"], j["email"], j["phone"], j["im"], j["qq"], j["role"])
 
+
 def logout_user(user_token):
     if not user_token:
-        return 
+        return
 
-    r = corelib.auth_requests("GET", "%s/user/logout" %config.API_ADDR)
+    r = corelib.auth_requests("GET", "%s/user/logout" % config.API_ADDR)
     if r.status_code != 200:
-        raise Exception("%s:%s" %(r.status_code, r.text))
+        raise Exception("%s:%s" % (r.status_code, r.text))
     clear_user_cookie(session)
+
 
 def login_user(name, password):
     params = {
         "name": name,
         "password": password,
     }
-    r = requests.post("%s/user/login" %config.API_ADDR, data=params)
+    r = requests.post("%s/user/login" % config.API_ADDR, data=params)
     if r.status_code != 200:
-        raise Exception("%s : %s" %(r.status_code, r.text))
+        raise Exception("%s : %s" % (r.status_code, r.text))
 
     j = r.json()
     ut = UserToken(j["name"], j["sig"])
     set_user_cookie(ut, session)
     return ut
+
 
 def admin_login_user(name, token):
     params = {
@@ -109,17 +121,19 @@ def admin_login_user(name, token):
     h = {
         "token": token
     }
-    r = requests.post("%s/admin/login" %config.API_ADDR, data=params, headers=h)
-    log.debug("%s:%s" %(r.status_code, r.text))
+    r = requests.post("%s/admin/login" %
+                      config.API_ADDR, data=params, headers=h)
+    log.debug("%s:%s" % (r.status_code, r.text))
     if r.status_code != 200:
         if json.loads(r.text)["error"] == "no such user":
             return None
         else:
-            raise Exception("%s : %s" %(r.status_code, r.text))
+            raise Exception("%s : %s" % (r.status_code, r.text))
     j = r.json()
     ut = UserToken(j["name"], j["sig"])
     set_user_cookie(ut, session)
     return ut
+
 
 def ldap_login_user(name, password):
     import ldap
@@ -129,33 +143,42 @@ def ldap_login_user(name, password):
     bind_dn = config.LDAP_BINDDN_FMT
     base_dn = config.LDAP_BASE_DN
     try:
-        bind_dn = config.LDAP_BINDDN_FMT %name
-    except TypeError: pass
+        bind_dn = config.LDAP_BINDDN_FMT % name
+    except TypeError:
+        pass
 
     search_filter = config.LDAP_SEARCH_FMT
     try:
-        search_filter = config.LDAP_SEARCH_FMT %name
-    except TypeError: pass
+        search_filter = config.LDAP_SEARCH_FMT % name
+    except TypeError:
+        pass
 
     cli = None
     try:
-        ldap_server = config.LDAP_SERVER if (config.LDAP_SERVER.startswith("ldap://") or config.LDAP_SERVER.startswith("ldaps://")) else "ldaps://%s" % config.LDAP_SERVER if config.LDAP_TLS_START_TLS else "ldap://%s" % config.LDAP_SERVER
-        log.debug("ldap_server:%s bind_dn:%s base_dn:%s filter:%s attrs:%s" %(ldap_server, bind_dn, config.LDAP_BASE_DN, search_filter, config.LDAP_ATTRS))
+        ldap_server = config.LDAP_SERVER if (config.LDAP_SERVER.startswith("ldap://") or config.LDAP_SERVER.startswith(
+            "ldaps://")) else "ldaps://%s" % config.LDAP_SERVER if config.LDAP_TLS_START_TLS else "ldap://%s" % config.LDAP_SERVER
+        log.debug("ldap_server:%s bind_dn:%s base_dn:%s filter:%s attrs:%s" % (
+            ldap_server, bind_dn, config.LDAP_BASE_DN, search_filter, config.LDAP_ATTRS))
         cli = ldap.initialize(ldap_server)
         cli.protocol_version = ldap.VERSION3
         if config.LDAP_TLS_START_TLS or ldap_server.startswith('ldaps://'):
             if config.LDAP_TLS_CACERTFILE:
-                cli.set_option(ldap.OPT_X_TLS_CACERTFILE, config.LDAP_TLS_CACERTFILE)
+                cli.set_option(ldap.OPT_X_TLS_CACERTFILE,
+                               config.LDAP_TLS_CACERTFILE)
             if config.LDAP_TLS_CERTFILE:
-                cli.set_option(ldap.OPT_X_TLS_CERTFILE, config.LDAP_TLS_CERTFILE)
+                cli.set_option(ldap.OPT_X_TLS_CERTFILE,
+                               config.LDAP_TLS_CERTFILE)
             if config.LDAP_TLS_KEYFILE:
                 cli.set_option(ldap.OPT_X_TLS_KEYFILE, config.LDAP_TLS_KEYFILE)
             if config.LDAP_TLS_REQUIRE_CERT:
-                cli.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, config.LDAP_TLS_REQUIRE_CERT)
+                cli.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,
+                               config.LDAP_TLS_REQUIRE_CERT)
             if config.LDAP_TLS_CIPHER_SUITE:
-                cli.set_option(ldap.OPT_X_TLS_CIPHER_SUITE, config.LDAP_TLS_CIPHER_SUITE)
+                cli.set_option(ldap.OPT_X_TLS_CIPHER_SUITE,
+                               config.LDAP_TLS_CIPHER_SUITE)
         cli.simple_bind_s(bind_dn, password)
-        result = cli.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter, config.LDAP_ATTRS)
+        result = cli.search_s(base_dn, ldap.SCOPE_SUBTREE,
+                              search_filter, config.LDAP_ATTRS)
         log.debug("ldap result: %s" % result)
         d = result[0][1]
         email = d['mail'][0]
@@ -168,13 +191,13 @@ def ldap_login_user(name, password):
             phone = d['telephoneNumber'] and d['telephoneNumber'][0] or ""
         else:
             phone = ""
-    
+
         return {
-                "name": name,
-                "password": password,
-                "cnname": cnname,
-                "email": email,
-                "phone": phone,
+            "name": name,
+            "password": password,
+            "cnname": cnname,
+            "email": email,
+            "phone": phone,
         }
     except ldap.LDAPError as e:
         if "desc" in e[0]:
@@ -189,30 +212,32 @@ def ldap_login_user(name, password):
     finally:
         cli and cli.unbind_s()
 
+
 def get_api_token(name, password):
     d = {
         "name": name, "password": password,
     }
-	
-    h = {"Content-type":"application/json"}
-	
-    r = requests.post("%s/user/login" %(config.API_ADDR,), \
-            data=json.dumps(d), headers=h)
-    log.debug("%s:%s" %(r.status_code, r.text))
-	
+
+    h = {"Content-type": "application/json"}
+
+    r = requests.post("%s/user/login" % (config.API_ADDR,),
+                      data=json.dumps(d), headers=h)
+    log.debug("%s:%s" % (r.status_code, r.text))
+
     if r.status_code != 200:
-        raise Exception("%s %s" %(r.status_code, r.text))
+        raise Exception("%s %s" % (r.status_code, r.text))
     sig = json.loads(r.text)["sig"]
-    return json.dumps({"name":name,"sig":sig})
+    return json.dumps({"name": name, "sig": sig})
+
 
 def create_user(user_info):
-    h = {"Content-type":"application/json"}
-	
-    r = requests.post("%s/user/create" %(config.API_ADDR,), \
-           data=json.dumps(user_info), headers=h)
-    log.debug("%s:%s" %(r.status_code, r.text))
-	
+    h = {"Content-type": "application/json"}
+
+    r = requests.post("%s/user/create" % (config.API_ADDR,),
+                      data=json.dumps(user_info), headers=h)
+    log.debug("%s:%s" % (r.status_code, r.text))
+
     if r.status_code != 200:
-        raise Exception("%s %s" %(r.status_code, r.text))
-		
+        raise Exception("%s %s" % (r.status_code, r.text))
+
     return

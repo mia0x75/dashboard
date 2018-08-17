@@ -1,9 +1,10 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 from flask import jsonify, render_template, request, g, abort
 from rrd import app
 from rrd.model.alarm import Event, EventCase
 import json
+
 
 @app.route("/alarm-dash/case")
 def alarm_dash_case_get():
@@ -22,11 +23,13 @@ def alarm_dash_case_get():
     if limit > 200:
         limit = int(200)
 
-    cases, total = EventCase.query(page, limit, endpoint_q, metric_q, status, from_date, to_date)
+    cases, total = EventCase.query(
+        page, limit, endpoint_q, metric_q, status, from_date, to_date)
     if status == 'PROBLEM':
         return render_template("alarm/case_problem.html", **locals())
     else:
         return render_template("alarm/case.html", **locals())
+
 
 @app.route("/alarm-dash/case/event")
 def alarm_dash_event_get():
@@ -39,10 +42,11 @@ def alarm_dash_event_get():
 
     _cases = EventCase.select_vs(where='id=%s', params=[case_id], limit=1)
     if len(_cases) == 0:
-        abort(400, "no such case where id=%s" %case_id)
+        abort(400, "no such case where id=%s" % case_id)
     case = _cases[0]
 
-    case_events, total = Event.query(event_caseId=case_id, page=page, limit=limit)
+    case_events, total = Event.query(
+        event_caseId=case_id, page=page, limit=limit)
     return render_template("alarm/case_events.html", **locals())
 
 
@@ -54,8 +58,8 @@ def alarm_dash_case_delete():
     ids = request.form.get("ids") or ""
     ids = ids.split(",") or []
     if not ids:
-       ret['msg'] = "no case ids" 
-       return json.dumps(ret)
+        ret['msg'] = "no case ids"
+        return json.dumps(ret)
 
     holders = []
     for x in ids:
@@ -70,6 +74,7 @@ def alarm_dash_case_delete():
 
     return json.dumps(ret)
 
+
 @app.route("/alarm-dash/case/event/delete", methods=['POST'])
 def alarm_dash_case_event_delete():
     ret = {
@@ -78,8 +83,8 @@ def alarm_dash_case_event_delete():
     ids = request.form.get("ids") or ""
     ids = ids.split(",") or []
     if not ids:
-       ret['msg'] = "no case ids" 
-       return json.dumps(ret)
+        ret['msg'] = "no case ids"
+        return json.dumps(ret)
 
     holders = []
     for x in ids:

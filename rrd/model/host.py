@@ -3,6 +3,7 @@
 from .bean import Bean
 from rrd.store import db
 
+
 class Host(Bean):
     _tbl = 'host'
     _cols = 'id, hostname, maintain_begin, maintain_end'
@@ -25,7 +26,8 @@ class Host(Bean):
             where += ' and hostname like %s'
             params.append('%' + query + '%')
 
-        vs = cls.select_vs(where=where, params=params, page=page, limit=limit, order='hostname')
+        vs = cls.select_vs(where=where, params=params,
+                           page=page, limit=limit, order='hostname')
         total = cls.total(where, params)
         return vs, total
 
@@ -34,14 +36,16 @@ class Host(Bean):
         if not host_ids:
             return 'host ids is blank'
 
-        cls.update('maintain_begin = %s, maintain_end = %s where id in (%s)' % (begin, end, host_ids))
+        cls.update('maintain_begin = %s, maintain_end = %s where id in (%s)' % (
+            begin, end, host_ids))
         return ''
 
     @classmethod
     def no_maintain(cls, host_ids):
         if not host_ids:
             return 'host ids is blank'
-        cls.update('maintain_begin = 0, maintain_end = 0 where id in (%s)' % host_ids)
+        cls.update(
+            'maintain_begin = 0, maintain_end = 0 where id in (%s)' % host_ids)
         return ''
 
     @classmethod

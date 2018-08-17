@@ -1,7 +1,8 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import requests
 import json
+
 
 def auth_requests(method, *args, **kwargs):
     from flask import g
@@ -9,7 +10,7 @@ def auth_requests(method, *args, **kwargs):
         raise Exception("no api token")
 
     headers = {
-        "Apitoken": json.dumps({"name":g.user_token.name, "sig":g.user_token.sig})
+        "Apitoken": json.dumps({"name": g.user_token.name, "sig": g.user_token.sig})
     }
 
     if not kwargs:
@@ -29,4 +30,3 @@ def auth_requests(method, *args, **kwargs):
         return requests.delete(*args, headers=headers, **kwargs)
     else:
         raise Exception("invalid http method")
-

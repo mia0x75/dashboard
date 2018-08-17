@@ -1,24 +1,25 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import MySQLdb
 from rrd import config
 from rrd.utils.logger import logging
 
 portal_db_cfg = {
-        "DB_HOST": config.PORTAL_DB_HOST,
-        "DB_PORT": config.PORTAL_DB_PORT,
-        "DB_USER": config.PORTAL_DB_USER,
-        "DB_PASS": config.PORTAL_DB_PASS,
-        "DB_NAME": config.PORTAL_DB_NAME,
+    "DB_HOST": config.PORTAL_DB_HOST,
+    "DB_PORT": config.PORTAL_DB_PORT,
+    "DB_USER": config.PORTAL_DB_USER,
+    "DB_PASS": config.PORTAL_DB_PASS,
+    "DB_NAME": config.PORTAL_DB_NAME,
 }
 
 alarm_db_cfg = {
-        "DB_HOST": config.ALARM_DB_HOST,
-        "DB_PORT": config.ALARM_DB_PORT,
-        "DB_USER": config.ALARM_DB_USER,
-        "DB_PASS": config.ALARM_DB_PASS,
-        "DB_NAME": config.ALARM_DB_NAME,
+    "DB_HOST": config.ALARM_DB_HOST,
+    "DB_PORT": config.ALARM_DB_PORT,
+    "DB_USER": config.ALARM_DB_USER,
+    "DB_PASS": config.ALARM_DB_PASS,
+    "DB_NAME": config.ALARM_DB_NAME,
 }
+
 
 def connect_db(cfg):
     try:

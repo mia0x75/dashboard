@@ -46,3 +46,5 @@ from view import plugin
 from view import strategy
 from view import template
 from view import variable
+from view import metric
+from view import graph

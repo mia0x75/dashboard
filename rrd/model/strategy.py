@@ -36,4 +36,3 @@ class Strategy(Bean):
             'run_end': self.run_end,
             'tpl_id': self.tpl_id
         }
-

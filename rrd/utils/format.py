@@ -7,13 +7,15 @@ new_pattern = re.compile(r'\{(\w+(\.\w+|\[\w+\])?)\}')
 
 __formaters = {}
 
+
 def format(text, *a, **kw):
     f = __formaters.get(text)
     if f is None:
         f = formater(text)
         __formaters[text] = f
     return f(*a, **kw)
-    #return formater(text)(*a, **kw)
+    # return formater(text)(*a, **kw)
+
 
 def formater(text):
     """
@@ -33,7 +35,7 @@ def formater(text):
 #        return kw[k]
     def translator(k):
         if '.' in k:
-            name,attr = k.split('.')
+            name, attr = k.split('.')
             if name.isdigit():
                 k = int(name)
                 return lambda *a, **kw: getattr(a[k], attr)
@@ -49,19 +51,21 @@ def formater(text):
             if k.isdigit():
                 return lambda *a, **kw: a[int(k)]
             return lambda *a, **kw: kw[k]
-    args = [translator(k) for k,_1 in new_pattern.findall(text)]
+    args = [translator(k) for k, _1 in new_pattern.findall(text)]
     if args:
         if old_pattern.findall(text):
             raise Exception('mixed format is not allowed')
         f = new_pattern.sub('%s', text)
+
         def _(*a, **kw):
-            return f % tuple([k(*a,**kw) for k in args])
+            return f % tuple([k(*a, **kw) for k in args])
         return _
     elif '%(' in text:
-        return lambda *a, **kw: text % kw 
+        return lambda *a, **kw: text % kw
     else:
         n = len(old_pattern.findall(text))
         return lambda *a, **kw: text % tuple(a[:n])
+
 
 if __name__ == '__main__':
     import doctest

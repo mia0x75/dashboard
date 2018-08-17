@@ -45,6 +45,8 @@
                     <a href="{{ url_for('cluster_list_get', group_id=v.id) }}">aggregator</a>
                     <span class="cut-line">¦</span>
                     <a href="{{ url_for('variable_list_get', group_id=v.id) }}">variables</a>
+                    <span class="cut-line">¦</span>
+                    <a href="{{ url_for('graph_list_get', group_id=v.id) }}" target="_blank">graph</a>
                     {% if v.writable(g.user) %}
                         <span class="cut-line">¦</span>
                         <a href="javascript:edit_hostgroup('{{ v.id }}', '{{ v.grp_name }}');" style="text-decoration: none;">

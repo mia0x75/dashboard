@@ -63,7 +63,7 @@ def variable_edit_post(variable_id):
     grp_id = request.form['grp_id'].strip()
     if variable_id:
         # edit
-        if Variable.exists('name=%s and content=%s and note=%s and id<>%s', [name, content, note, variable_id]):
+        if Variable.exists('name=%s and content=%s and note=%s and grp_id=%s', [name, content, note, variable_id]):
             return jsonify(msg='%s/%s/%s has already existent' % (name, content, note))
         Variable.update_dict({
             'name': name,

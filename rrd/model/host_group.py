@@ -5,6 +5,7 @@ from rrd.config import MAINTAINERS
 from rrd.store import db
 from rrd.model.user import User
 
+
 class HostGroup(Bean):
     _tbl = 'grp'
     _cols = 'id, grp_name, create_user, come_from'
@@ -16,9 +17,9 @@ class HostGroup(Bean):
         self.create_user = create_user
         self.come_from = come_from
 
-    #TODO:admin should manage the group
+    # TODO:admin should manage the group
     def writable(self, user):
-        #user can be str or User obj
+        # user can be str or User obj
         if isinstance(user, str):
             user = User.get_by_name(user)
 
@@ -44,7 +45,8 @@ class HostGroup(Bean):
             where += 'grp_name like %s'
             params.append('%' + query + '%')
 
-        vs = cls.select_vs(where=where, params=params, page=page, limit=limit, order='grp_name')
+        vs = cls.select_vs(where=where, params=params,
+                           page=page, limit=limit, order='grp_name')
         total = cls.total(where, params)
         return vs, total
 

@@ -2,6 +2,7 @@
 
 from rrd.store import db
 
+
 class Bean(object):
     _tbl = ''
     _id = 'id'
@@ -16,7 +17,8 @@ class Bean(object):
         size = len(data)
         keys = data.keys()
         safe_keys = ['`%s`' % k for k in keys]
-        sql = 'INSERT INTO `%s`(%s) VALUES(%s)' % (cls._tbl, ','.join(safe_keys), '%s' + ',%s' * (size - 1))
+        sql = 'INSERT INTO `%s`(%s) VALUES(%s)' % (
+            cls._tbl, ','.join(safe_keys), '%s' + ',%s' * (size - 1))
         last_id = cls._db.insert(sql, [data[key] for key in keys])
         return last_id
 
@@ -87,7 +89,8 @@ class Bean(object):
 
     @classmethod
     def select_vs(cls, where=None, params=None, order=None, limit=None, page=None, offset=None):
-        rows = cls.select(where=where, params=params, order=order, limit=limit, page=page, offset=offset)
+        rows = cls.select(where=where, params=params, order=order,
+                          limit=limit, page=page, offset=offset)
         return [cls(*row) for row in rows]
 
     @classmethod

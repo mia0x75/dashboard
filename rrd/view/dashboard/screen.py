@@ -11,6 +11,7 @@ import datetime
 from rrd import app
 from rrd.model.screen import DashboardScreen
 from rrd.model.graph import DashboardGraph
+from rrd.model.endpoint import Endpoint
 from rrd import consts
 from rrd.utils.graph_urls import generate_graph_urls
 from rrd import config
@@ -179,8 +180,15 @@ def dash_graph_add(sid):
         return redirect("/screen/%s" % sid)
 
     else:
+        limit = 10000
         gid = request.args.get("gid")
         graph = gid and DashboardGraph.get(gid)
+        options = {}
+        options['hosts'] = Endpoint.search(''.split(), limit=limit)
+        ids = []
+        for ep in options['hosts']:
+            ids.append(ep.id)
+        options['counters'] = EndpointCounter.gets_by_endpoint_ids(ids[0:1], limit=limit)
         return render_template("screen/graph_add.html", config=config, **locals())
 
 @app.route("/graph/<int:gid>/edit", methods=["GET", "POST"])

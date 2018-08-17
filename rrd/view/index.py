@@ -6,7 +6,6 @@ from flask import request, abort, g, render_template
 from rrd import app, config
 from rrd import corelib
 
-
 def get_api_endpoints(q, tags, page=1, limit=100):
     if not q and not tags:
         raise Exception("no query params given")

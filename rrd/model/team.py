@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import json
 from rrd import corelib
@@ -8,12 +8,13 @@ from rrd.model.user import User
 from rrd.utils.logger import logging
 log = logging.getLogger(__file__)
 
+
 class Team(object):
     def __init__(self, id, name, resume, creator, creator_name, users=[]):
         self.id = id
         self.name = name
         self.resume = resume
-        self.creator = creator #creator id
+        self.creator = creator  # creator id
         self.creator_name = creator_name
         self.users = users
 
@@ -34,23 +35,23 @@ class Team(object):
     @classmethod
     def get_team_users(cls, team_id):
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("GET", "%s/team/t/%s" \
-                %(config.API_ADDR, team_id), headers=h)
-        log.debug("%s:%s" %(r.status_code, r.text))
+        r = corelib.auth_requests("GET", "%s/team/t/%s"
+                                  % (config.API_ADDR, team_id), headers=h)
+        log.debug("%s:%s" % (r.status_code, r.text))
 
         if r.status_code != 200:
-            raise Exception("%s %s" %(r.status_code, r.text))
+            raise Exception("%s %s" % (r.status_code, r.text))
         return r.json()
 
     @classmethod
     def get_team_users_by_name(cls, team_name):
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("GET", "%s/team/name/%s" \
-                %(config.API_ADDR, team_name), headers=h)
-        log.debug("%s:%s" %(r.status_code, r.text))
+        r = corelib.auth_requests("GET", "%s/team/name/%s"
+                                  % (config.API_ADDR, team_name), headers=h)
+        log.debug("%s:%s" % (r.status_code, r.text))
 
         if r.status_code != 200:
-            raise Exception("%s %s" %(r.status_code, r.text))
+            raise Exception("%s %s" % (r.status_code, r.text))
         return r.json()
 
     @classmethod
@@ -64,17 +65,19 @@ class Team(object):
             "page": page,
         }
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("GET", "%s/team" \
-                %(config.API_ADDR,), params=d, headers=h)
-        log.debug("%s:%s" %(r.status_code, r.text))
+        r = corelib.auth_requests("GET", "%s/team"
+                                  % (config.API_ADDR,), params=d, headers=h)
+        log.debug("%s:%s" % (r.status_code, r.text))
 
         if r.status_code != 200:
-            raise Exception("%s %s" %(r.status_code, r.text))
+            raise Exception("%s %s" % (r.status_code, r.text))
 
         teams = []
         for j in r.json():
-            users = [User(x["id"], x["name"], x["cnname"], x["email"], x["phone"], x["im"], x["qq"], x["role"]) for x in j['users']]
-            t = Team(j["team"]["id"], j["team"]["name"], j["team"]["resume"], j["team"]["creator"], j['creator_name'], users)
+            users = [User(x["id"], x["name"], x["cnname"], x["email"],
+                          x["phone"], x["im"], x["qq"], x["role"]) for x in j['users']]
+            t = Team(j["team"]["id"], j["team"]["name"], j["team"]
+                     ["resume"], j["team"]["creator"], j['creator_name'], users)
             teams.append(t)
 
         return teams
@@ -85,12 +88,12 @@ class Team(object):
         d = {
             "team_name": name, "resume": resume, "users": user_ids,
         }
-        r = corelib.auth_requests("POST", "%s/team" %(config.API_ADDR,), \
-                data=json.dumps(d), headers=h)
-        log.debug("%s:%s" %(r.status_code, r.text))
+        r = corelib.auth_requests("POST", "%s/team" % (config.API_ADDR,),
+                                  data=json.dumps(d), headers=h)
+        log.debug("%s:%s" % (r.status_code, r.text))
 
         if r.status_code != 200:
-            raise Exception("%s %s" %(r.status_code, r.text))
+            raise Exception("%s %s" % (r.status_code, r.text))
         return r.text
 
     @classmethod
@@ -99,21 +102,21 @@ class Team(object):
         d = {
             "team_id": team_id, "resume": resume, "users": user_ids,
         }
-        r = corelib.auth_requests("PUT", "%s/team" %(config.API_ADDR,), \
-                data=json.dumps(d), headers=h)
-        log.debug("%s:%s" %(r.status_code, r.text))
+        r = corelib.auth_requests("PUT", "%s/team" % (config.API_ADDR,),
+                                  data=json.dumps(d), headers=h)
+        log.debug("%s:%s" % (r.status_code, r.text))
 
         if r.status_code != 200:
-            raise Exception("%s %s" %(r.status_code, r.text))
+            raise Exception("%s %s" % (r.status_code, r.text))
         return r.text
 
     @classmethod
     def delete_team(cls, team_id):
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("DELETE", "%s/team/%s" \
-                %(config.API_ADDR, team_id), headers=h)
-        log.debug("%s:%s" %(r.status_code, r.text))
+        r = corelib.auth_requests("DELETE", "%s/team/%s"
+                                  % (config.API_ADDR, team_id), headers=h)
+        log.debug("%s:%s" % (r.status_code, r.text))
 
         if r.status_code != 200:
-            raise Exception("%s %s" %(r.status_code, r.text))
+            raise Exception("%s %s" % (r.status_code, r.text))
         return r.text

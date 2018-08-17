@@ -1,11 +1,12 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import json
 import copy
 import re
 from rrd import config
 from rrd.model.tmpgraph import TmpGraph
-from rrd.model.endpoint import Endpoint, EndpointCounter
+from rrd.model.endpoint import Endpoint
+from rrd.model.endpoint_counter import EndpointCounter
 
 def generate_graph_urls(graph, start, end):
     counters = graph.counters or []
@@ -26,7 +27,7 @@ def generate_graph_urls(graph, start, end):
         if c.find("metric=") == -1:
             counters.append(c)
         else:
-            metric=""
+            metric = ""
             tags = []
             qs = []
             c = c.strip()
@@ -39,16 +40,17 @@ def generate_graph_urls(graph, start, end):
                     qs.append(q)
                     tags.append(q)
 
-            counter_objs = EndpointCounter.search_in_endpoint_ids(qs, endpoint_ids[:], limit=100)
+            counter_objs = EndpointCounter.search_in_endpoint_ids(
+                qs, endpoint_ids[:], limit=100)
             if not counter_objs:
                 continue
             for co in counter_objs:
-                if not re.search('^%s(/|$)' %metric, co.counter):
+                if not re.search('^%s(/|$)' % metric, co.counter):
                     continue
 
                 matched = True
                 for tag in tags:
-                    if not re.search('(/|,)%s(,|$)' %tag, co.counter):
+                    if not re.search('(/|,)%s(,|$)' % tag, co.counter):
                         matched = False
                         break
                 if not matched:
@@ -61,61 +63,67 @@ def generate_graph_urls(graph, start, end):
 
     return _generate_graph_urls(graph, counters, endpoint_list, start, end)
 
+
 def _generate_graph_urls(graph, counters, endpoint_list, start, end):
     ret_graphs = []
 
     if graph.graph_type == 'h':
         for c in counters:
-            tmp_graph_id = TmpGraph.add(endpoint_list, [c,])
+            tmp_graph_id = TmpGraph.add(endpoint_list, [c, ])
             if not tmp_graph_id:
                 break
 
             new_g = copy.deepcopy(graph)
             new_g.counters = c
             if end:
-                new_g.src = '''/chart/h?id=%s&start=%s&end=%s''' %(tmp_graph_id, start or (0-graph.timespan), end)
+                new_g.src = '''/chart/h?id=%s&start=%s&end=%s''' % (
+                    tmp_graph_id, start or (0-graph.timespan), end)
             else:
-                new_g.src = '''/chart/h?id=%s&start=%s''' %(tmp_graph_id, start or (0-graph.timespan))
+                new_g.src = '''/chart/h?id=%s&start=%s''' % (
+                    tmp_graph_id, start or (0-graph.timespan))
             if graph.method == 'SUM':
                 new_g.src += "&sum=on"
             else:
-                new_g.src += "&cf=%s" %graph.method
+                new_g.src += "&cf=%s" % graph.method
 
             ret_graphs.append(new_g)
-    elif graph.graph_type=='k':
+    elif graph.graph_type == 'k':
         for e in endpoint_list:
-            tmp_graph_id = TmpGraph.add([e,], counters)
+            tmp_graph_id = TmpGraph.add([e, ], counters)
             if not tmp_graph_id:
                 break
 
             new_g = copy.deepcopy(graph)
             new_g.hosts = e
             if end:
-                new_g.src = '''/chart/k?id=%s&start=%s&end=%s''' %(tmp_graph_id, start or (0-graph.timespan), end)
+                new_g.src = '''/chart/k?id=%s&start=%s&end=%s''' % (
+                    tmp_graph_id, start or (0-graph.timespan), end)
             else:
-                new_g.src = '''/chart/k?id=%s&start=%s''' %(tmp_graph_id, start or (0-graph.timespan))
+                new_g.src = '''/chart/k?id=%s&start=%s''' % (
+                    tmp_graph_id, start or (0-graph.timespan))
             if graph.method == 'SUM':
                 new_g.src += "&sum=on"
             else:
-                new_g.src += "&cf=%s" %graph.method
+                new_g.src += "&cf=%s" % graph.method
 
             ret_graphs.append(new_g)
     else:
-        #组合视角
+        # 组合视角
         tmp_graph_id = TmpGraph.add(endpoint_list, counters)
         if not tmp_graph_id:
             return []
         new_g = copy.deepcopy(graph)
         if end:
-            new_g.src = '''/chart/a?id=%s&start=%s&end=%s''' %(tmp_graph_id, start or (0-graph.timespan), end)
+            new_g.src = '''/chart/a?id=%s&start=%s&end=%s''' % (
+                tmp_graph_id, start or (0-graph.timespan), end)
         else:
-            new_g.src = '''/chart/a?id=%s&start=%s''' %(tmp_graph_id, start or (0-graph.timespan))
+            new_g.src = '''/chart/a?id=%s&start=%s''' % (
+                tmp_graph_id, start or (0-graph.timespan))
         if graph.method == 'SUM':
             new_g.src += "&sum=on"
         else:
-            new_g.src += "&cf=%s" %graph.method
+            new_g.src += "&cf=%s" % graph.method
 
         ret_graphs.append(new_g)
 
     return ret_graphs
-

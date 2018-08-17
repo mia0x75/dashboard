@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 from flask import jsonify, render_template, request, g
 from flask.ext.babel import gettext

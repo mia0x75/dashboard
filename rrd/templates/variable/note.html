@@ -1,21 +1,21 @@
 <div>
-    <h4>说明:</h4>
-    <ol>
-        <li>name和content不能为空，note可以为空;</li>
-        <li>同一个参数集合下(绑定在同一个hostgroup下),所有参数不能同名;</li>
-        <li>对于端口类型的参数，请以<b class="red">{process_name}_port</b>命名(如：nginx_port);如果多个端口，请以逗号(",")分隔;监控端口存活性的插件将找出所有*_port参数进行检测;</li>
-        <li>对于进程类型的参数，请以<b class="red">{process_name}_path</b>命名(如：nginx_path);</li>
-        <li>对于同一台机器有多个相同进程启动的情况(如：redis启动多个端口进程)，如果要监控全部的进程状态，请增加参数<b class="red">{process_name}_params</b>, 多个参数以逗号分隔;</li>
-        <li class="alert-danger">endpoint参数为内部参数，请不要自定义此参数。</li>
-        <li>
-            服务错误日志的监控说明
-            <ul>
-                <li>对于错误日志的监控参数名，请以<b class="red">{process_name}_log_monitor</b>命名(如：nginx_log_monitor);</li>
-                <li>参数内容格式：日志文件绝对路径|统计方法[|关键字]，三个字段以|分隔</li>
-                <li>统计方法有三种:COUNT(统计总数), INCLUDE(匹配), EXCLUDE(排除)</li>
-                <li>如果是COUNT方法，第三个字段可以省略</li>
-                <li>输出的metric名称为{process_name}.errorlog.count; 如果有第三个字段，metric的tags="keyword=$keyword"</li>
-            </ul>
-        </li>
-    </ol>
+	<h4>说明:</h4>
+	<ol>
+		<li>name和content不能为空，note可以为空;</li>
+		<li>同一个参数集合下(绑定在同一个hostgroup下),所有参数不能同名;</li>
+		<li>对于端口类型的参数，请以<b class="red">{process_name}_port</b>命名(如：nginx_port);如果多个端口，请以逗号(",")分隔;监控端口存活性的插件将找出所有*_port参数进行检测;</li>
+		<li>对于进程类型的参数，请以<b class="red">{process_name}_path</b>命名(如：nginx_path);</li>
+		<li>对于同一台机器有多个相同进程启动的情况(如：redis启动多个端口进程)，如果要监控全部的进程状态，请增加参数<b class="red">{process_name}_params</b>, 多个参数以逗号分隔;</li>
+		<li class="alert-danger">endpoint参数为内部参数，请不要自定义此参数。</li>
+		<li>
+			服务错误日志的监控说明
+			<ul>
+				<li>对于错误日志的监控参数名，请以<b class="red">{process_name}_log_monitor</b>命名(如：nginx_log_monitor);</li>
+				<li>参数内容格式：日志文件绝对路径|统计方法[|关键字]，三个字段以|分隔</li>
+				<li>统计方法有三种:COUNT(统计总数), INCLUDE(匹配), EXCLUDE(排除)</li>
+				<li>如果是COUNT方法，第三个字段可以省略</li>
+				<li>输出的metric名称为{process_name}.errorlog.count; 如果有第三个字段，metric的tags="keyword=$keyword"</li>
+			</ul>
+		</li>
+	</ol>
 </div>

@@ -17,6 +17,7 @@ from rrd import corelib, config
 from rrd.utils.logger import logging
 log = logging.getLogger(__file__)
 
+
 @app.route("/favicon.ico")
 def favicon():
     return ""
@@ -31,6 +32,7 @@ def api_version():
 def api_health():
     return 'ok'
 
+
 @app.route('/api/user/<int:user_id>/inteams/<team_names>')
 def api_user_in_teams(user_id, team_names):
     u = User.get_by_id(user_id)
@@ -41,6 +43,7 @@ def api_user_in_teams(user_id, team_names):
         return jsonify(data=True)
     else:
         return jsonify(data=False)
+
 
 @app.route('/api/uic/group')
 def api_query_uic_group():
@@ -99,7 +102,7 @@ def api_strategy_get(s_id):
     if not s:
         return jsonify(msg="no such strategy")
     return jsonify(msg='', data=s.to_json())
-    
+
 
 @app.route('/api/metric/query')
 def api_metric_query():
@@ -107,15 +110,15 @@ def api_metric_query():
     limit = int(request.args.get('limit', '10'))
 
     h = {"Content-type": "application/json"}
-    r = corelib.auth_requests("GET", "%s/metric/default_list" \
-            %(config.API_ADDR,), headers=h)
+    r = corelib.auth_requests("GET", "%s/metric/default_list"
+                              % (config.API_ADDR,), headers=h)
     if r.status_code != 200:
-        log.error("%s:%s" %(r.status_code, r.text))       
+        log.error("%s:%s" % (r.status_code, r.text))
         return []
 
     metrics = r.json() or []
     matched_metrics = [x for x in metrics if q in x]
-    ret_data = [q,] + matched_metrics[:limit]
+    ret_data = [q, ] + matched_metrics[:limit]
 
     return jsonify(data=[{'name': name} for name in ret_data])
 
@@ -143,6 +146,7 @@ def api_group_hosts_json(grp_name):
     vs, _ = Host.query(1, 10000000, '', '0', group.id)
     names = [v.hostname for v in vs]
     return jsonify(msg='', data=names)
+
 
 @app.route('/api/host/<hostname>/variables', methods=['GET'])
 def api_host_variables(hostname):

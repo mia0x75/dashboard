@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <input type="text" value="{{ data.query }}" class="form-control" id="query"
+                   placeholder="search name">
+        </div>
+        <button type="button" onclick="query_metric();" class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </div>
+    <table class="table table-hover table-bordered table-striped" style="margin-bottom: 0px; margin-top: 10px;">
+        <thead>
+        <tr>
+            <th>name</th>
+            <th>updated</th>
+            <th>operation</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for v in data.vs %}
+            <tr>
+                <td>{{ v.name }}</td>
+                <td>{{ v.update_at }}</td>
+                <td>
+                    <a data-toggle="tooltip" data-placement="top" title="删除" href="javascript:delete_metric('{{ v.id }}');"
+                        style="text-decoration: none;">
+                        <span class="glyphicon glyphicon-trash orange"></span>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% import "blocks.html" as blocks %}
+    {{ blocks.pager('/metric?q='+data.query, data.total, data.limit, data.page) }}
+    <script>
+        $(function () {
+            $("#query").focus();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}

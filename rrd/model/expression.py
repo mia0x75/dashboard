@@ -45,7 +45,8 @@ class Expression(Bean):
             return 'right parentheses ) not found'
 
         in_parentheses = expression[left + 1:right]
-        in_parentheses = ' '.join(in_parentheses.replace(',', ' ').replace(';', ' ').split())
+        in_parentheses = ' '.join(in_parentheses.replace(
+            ',', ' ').replace(';', ' ').split())
         arr = in_parentheses.split()
         arr = [item for item in arr if '=' in item]
         if len(arr) < 2:
@@ -158,7 +159,7 @@ class Expression(Bean):
         return vs, total
 
     def writable(self, login_user):
-        #login_user can be str or User obj
+        # login_user can be str or User obj
         if isinstance(login_user, str):
             login_user = User.get_by_name(login_user)
 
@@ -186,7 +187,7 @@ class Expression(Bean):
     def to_json(self):
         return {
             "id": self.id,
-            "expression": self.expression,                       
+            "expression": self.expression,
             "func": self.func,
             "op": self.op,
             "right_value": self.right_value,

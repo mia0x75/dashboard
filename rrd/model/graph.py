@@ -1,12 +1,13 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import json
 from rrd.config import API_ADDR
 from rrd import corelib
 
+
 class DashboardGraph(object):
     def __init__(self, id, title, hosts, counters, screen_id,
-                timespan=3600, graph_type='h', method='', position=0):
+                 timespan=3600, graph_type='h', method='', position=0):
         self.id = str(id)
         self.title = title
         self.hosts = hosts or []
@@ -15,36 +16,39 @@ class DashboardGraph(object):
 
         self.timespan = timespan
         self.graph_type = graph_type
-        self.method = method.upper()  # method can be ["", "sum", "average", "max", "min", "last"]
-        self.position = position or int(self.id) # init as self.id
+        # method can be ["", "sum", "average", "max", "min", "last"]
+        self.method = method.upper()
+        self.position = position or int(self.id)  # init as self.id
 
     def __repr__(self):
-        return "<DashboardGraph id=%s, title=%s, screen_id=%s>" %(self.id, self.title, self.screen_id)
+        return "<DashboardGraph id=%s, title=%s, screen_id=%s>" % (self.id, self.title, self.screen_id)
     __str__ = __repr__
 
     @classmethod
     def gets_by_screen_id(cls, screen_id):
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("GET", API_ADDR + "/dashboard/graphs/screen/%s" %(screen_id,), headers=h)
+        r = corelib.auth_requests(
+            "GET", API_ADDR + "/dashboard/graphs/screen/%s" % (screen_id,), headers=h)
         if r.status_code != 200:
             raise Exception(r.text)
         j = r.json()
-        return [cls(*[x["graph_id"], x["title"], x["endpoints"], x["counters"], \
-                x["screen_id"], x["timespan"], x["graph_type"], x["method"], x["position"]]) for x in j]
+        return [cls(*[x["graph_id"], x["title"], x["endpoints"], x["counters"],
+                      x["screen_id"], x["timespan"], x["graph_type"], x["method"], x["position"]]) for x in j]
 
     @classmethod
     def get(cls, id):
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("GET", API_ADDR + "/dashboard/graph/%s" %(id,), headers=h)
+        r = corelib.auth_requests(
+            "GET", API_ADDR + "/dashboard/graph/%s" % (id,), headers=h)
         if r.status_code != 200:
             raise Exception(r.text)
         x = r.json()
-        return x and cls(*[x["graph_id"], x["title"], x["endpoints"], x["counters"], \
-                x["screen_id"], x["timespan"], x["graph_type"], x["method"], x["position"]])
+        return x and cls(*[x["graph_id"], x["title"], x["endpoints"], x["counters"],
+                           x["screen_id"], x["timespan"], x["graph_type"], x["method"], x["position"]])
 
     @classmethod
     def add(cls, title, hosts, counters, screen_id,
-                timespan=3600, graph_type='h', method='', position=0):
+            timespan=3600, graph_type='h', method='', position=0):
 
         d = {
             "screen_id": int(screen_id),
@@ -58,7 +62,8 @@ class DashboardGraph(object):
             "falcon_tags": "",
         }
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("POST", API_ADDR + "/dashboard/graph", data = json.dumps(d), headers =h )
+        r = corelib.auth_requests(
+            "POST", API_ADDR + "/dashboard/graph", data=json.dumps(d), headers=h)
         if r.status_code != 200:
             raise Exception(r.text)
         j = r.json()
@@ -69,13 +74,14 @@ class DashboardGraph(object):
     @classmethod
     def remove(cls, id):
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("DELETE", API_ADDR + "/dashboard/graph/%s" %(id,), headers=h)
+        r = corelib.auth_requests(
+            "DELETE", API_ADDR + "/dashboard/graph/%s" % (id,), headers=h)
         if r.status_code != 200:
             raise Exception(r.text)
         return r.json()
 
     def update(self, title=None, hosts=None, counters=None, screen_id=None,
-            timespan=None, graph_type=None, method=None, position=None):
+               timespan=None, graph_type=None, method=None, position=None):
 
         title = self.title if title is None else title
         hosts = self.hosts if hosts is None else hosts
@@ -85,7 +91,7 @@ class DashboardGraph(object):
         graph_type = graph_type or self.graph_type
         method = method if method is not None else self.method
         position = position or self.position
-    
+
         d = {
             "screen_id": int(screen_id),
             "title": title,
@@ -98,7 +104,8 @@ class DashboardGraph(object):
             "falcon_tags": "",
         }
         h = {"Content-type": "application/json"}
-        r = corelib.auth_requests("PUT", API_ADDR + "/dashboard/graph/%s" %(self.id,), data = json.dumps(d), headers =h )
+        r = corelib.auth_requests(
+            "PUT", API_ADDR + "/dashboard/graph/%s" % (self.id,), data=json.dumps(d), headers=h)
         if r.status_code != 200:
             raise Exception(r.text)
         j = r.json()
@@ -114,4 +121,3 @@ class DashboardGraph(object):
             counters = x["counters"] or []
             grh = cls.get(id)
             grh and grh.update(hosts=hosts, counters=counters)
-        

@@ -11,7 +11,7 @@ def nodatas_get():
     page = int(request.args.get('p', 1))
     limit = int(request.args.get('limit', 5))
     query = request.args.get('q', '').strip()
-    mine = request.args.get('mine', '1')
+    mine = request.args.get('mine', '0')
     me = g.user.name if mine == '1' else None
     vs, total = Nodata.query(page, limit, query, me)
     return render_template(
@@ -45,12 +45,12 @@ def nodata_update_post():
     mock = request.form['mock'].strip()
 
     msg = required_chk({
-        'name' : name,
-        'endpoint' : obj,
-        'endpoint_type' : obj_type,
-        'metric' : metric,
-        'type' : dstype,
-        'step' : step,
+        'name': name,
+        'endpoint': obj,
+        'endpoint_type': obj_type,
+        'metric': metric,
+        'type': dstype,
+        'step': step,
         'mock_value': mock,
     })
 

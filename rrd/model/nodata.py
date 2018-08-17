@@ -26,7 +26,7 @@ class Nodata(Bean):
         self.creator = creator
         self.t_create = t_create
         self.t_modify = t_modify
- 
+
     @classmethod
     def query(cls, page, limit, query, me=None):
         where = ''
@@ -62,13 +62,13 @@ class Nodata(Bean):
     @classmethod
     def insert_nodata(cls, name, obj, obj_type, metric, tags, dstype, step, mock, login_user):
         nodata_id = Nodata.insert({
-            'name' : name,
-            'obj' : obj,
-            'obj_type' : obj_type,
-            'metric' : metric,
-            'tags' : tags,
-            'dstype' : dstype,
-            'step' : step,
+            'name': name,
+            'obj': obj,
+            'obj_type': obj_type,
+            'metric': metric,
+            'tags': tags,
+            'dstype': dstype,
+            'step': step,
             'mock': mock,
             'creator': login_user,
             't_create': time.strftime('%Y-%m-%d %H:%M:%S')
@@ -87,13 +87,13 @@ class Nodata(Bean):
 
         Nodata.update_dict(
             {
-                'name' : name,
-                'obj' : obj,
-                'obj_type' : obj_type,
-                'metric' : metric,
-                'tags' : tags,
-                'dstype' : dstype,
-                'step' : step,
+                'name': name,
+                'obj': obj,
+                'obj_type': obj_type,
+                'metric': metric,
+                'tags': tags,
+                'dstype': dstype,
+                'step': step,
                 'mock': mock,
             },
             'id=%s',
@@ -102,7 +102,7 @@ class Nodata(Bean):
         return ''
 
     def writable(self, login_user):
-        #login_user can be str or User obj
+        # login_user can be str or User obj
         if isinstance(login_user, str):
             login_user = User.get_by_name(login_user)
 

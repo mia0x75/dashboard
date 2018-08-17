@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 import hashlib
 import json
@@ -9,38 +9,44 @@ import requests
 from rrd.config import API_ADDR
 from rrd import corelib
 
+
 def graph_info(endpoint_counter):
     if not endpoint_counter:
         return
 
     h = {"Content-type": "application/json"}
-    r = corelib.auth_requests("POST", "%s/graph/history" %API_ADDR, headers=h, data=json.dumps(params))
+    r = corelib.auth_requests("POST", "%s/graph/history" %
+                              API_ADDR, headers=h, data=json.dumps(params))
     if r.status_code != 200:
         raise
 
     return r.json()
 
+
 def graph_query(endpoint_counters, cf, start, end):
     params = {
-            "start_time": start,
-            "end_time": end,
-            "consol_fun": cf,
-            "counters": endpoint_counters,
+        "start_time": start,
+        "end_time": end,
+        "consol_fun": cf,
+        "counters": endpoint_counters,
     }
     #r = requests.post("%s/graph/history" %QUERY_ADDR, data=json.dumps(params))
     h = {"Content-type": "application/json"}
-    r = corelib.auth_requests("POST", "%s/graph/history" %API_ADDR, headers=h, data=json.dumps(params))
+    r = corelib.auth_requests("POST", "%s/graph/history" %
+                              API_ADDR, headers=h, data=json.dumps(params))
     if r.status_code != 200:
         raise Exception("{} : {}".format(r.status_code, r.text))
 
     return r.json()
 
+
 def digest_key(endpoint, key):
-    s = "%s/%s" %(endpoint.encode("utf8"), key.encode("utf8"))
+    s = "%s/%s" % (endpoint.encode("utf8"), key.encode("utf8"))
     return hashlib.md5(s).hexdigest()[:16]
 
+
 def graph_history(endpoints, counters, cf, start, end):
-    #TODO:step
+    # TODO:step
     params = {
         "start_time": start,
         "end_time": end,
@@ -49,11 +55,13 @@ def graph_history(endpoints, counters, cf, start, end):
         "counters": counters,
     }
     h = {"Content-type": "application/json"}
-    r = corelib.auth_requests("POST", "%s/graph/history" %API_ADDR, headers=h, data=json.dumps(params))
+    r = corelib.auth_requests("POST", "%s/graph/history" %
+                              API_ADDR, headers=h, data=json.dumps(params))
     if r.status_code != 200:
-        raise Exception("%s : %s" %(r.status_code, r.text))
+        raise Exception("%s : %s" % (r.status_code, r.text))
 
     return r.json()
+
 
 def merge_list(a, b):
     sum = []
@@ -79,6 +87,7 @@ def merge_list(a, b):
         sum.append(a[i])
 
     return sum
+
 
 def CF(cf, values):
     if cf == 'AVERAGE':

@@ -43,12 +43,13 @@ class Template(Bean):
             where += 'tpl_name like %s'
             params.append('%' + query + '%')
 
-        vs = cls.select_vs(where=where, params=params, page=page, limit=limit, order='tpl_name')
+        vs = cls.select_vs(where=where, params=params,
+                           page=page, limit=limit, order='tpl_name')
         total = cls.total(where, params)
         return vs, total
 
     def writable(self, login_user):
-        #login_user can be str or User obj
+        # login_user can be str or User obj
         if isinstance(login_user, str):
             login_user = User.get_by_name(login_user)
 

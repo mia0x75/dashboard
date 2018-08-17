@@ -37,7 +37,8 @@ class GrpTpl(Bean):
             return []
 
         grp_ids = ['%s' % i for i in group_ids]
-        tpl_ids = cls.column('tpl_id', where='grp_id in (%s)' % ', '.join(grp_ids))
+        tpl_ids = cls.column('tpl_id', where='grp_id in (%s)' %
+                             ', '.join(grp_ids))
         if not tpl_ids:
             return []
 

@@ -1,6 +1,7 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 from .bean import Bean
+
 
 class AlertLink(Bean):
     _tbl = 'alert_link'

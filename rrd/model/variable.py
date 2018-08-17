@@ -2,6 +2,7 @@
 
 from .bean import Bean
 
+
 class Variable(Bean):
     _tbl = 'variable'
     _id = 'id'

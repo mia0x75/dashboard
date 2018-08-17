@@ -281,6 +281,23 @@ function make_select2_for_uic_group(selector) {
     });
 }
 
+function query_metric() {
+    var query = $.trim($("#query").val());
+    window.location.href = '/metric?q=' + query;
+}
+
+function delete_metric(id) {
+    my_confirm('确定要删除？？？', ['确定', '取消'], function () {
+        $.getJSON('/metric/delete/' + id, {}, function (json) {
+            handle_quietly(json, function () {
+                location.reload();
+            });
+        })
+    }, function () {
+        return false;
+    });
+}
+
 function query_template() {
     var query = $.trim($("#query").val());
     var mine = document.getElementById('mine').checked ? 1 : 0;
