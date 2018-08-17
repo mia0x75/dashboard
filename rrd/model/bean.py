@@ -46,7 +46,7 @@ class Bean(object):
         if not data:
             raise ValueError('argument data is invalid')
 
-        size = len(data)
+        #size = len(data)
         keys = data.keys()
         safe_keys = ['`%s`' % k for k in keys]
         values = [data[key] for key in keys]

@@ -61,12 +61,13 @@ def team_create():
 
 
 @app.route("/team/<int:team_id>/edit", methods=["GET", "POST"])
-def team_edit(team_id):
+def team_edit(team_id):  # pylint disable=W0612
     if request.method == "GET":
         j = Team.get_team_users(team_id)
         team = Team(j['id'], j['name'], j['resume'],
                     j['creator'], j['creator_name'], [])
-        team_user_ids = ",".join([str(x['id']) for x in j['users']])
+        team_user_ids = ",".join([str(x['id'])
+                                  for x in j['users']])
 
         return render_template("team/edit.html", **locals())
 

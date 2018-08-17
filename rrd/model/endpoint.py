@@ -27,7 +27,7 @@ class Endpoint(object):
         for q in qs:
             sql += ''' and endpoint like %s'''
         sql += ''' limit %s,%s'''
-
+        # TODO: 改成api调用，增加falcon-api功能
         cursor = db_conn.execute(sql, args)
         rows = cursor.fetchall()
         cursor and cursor.close()
@@ -50,7 +50,7 @@ class Endpoint(object):
             placeholder + ''') and ts > %s '''
         for q in qs:
             sql += ''' and endpoint like %s'''
-
+        # TODO: 改成api调用，增加falcon-api功能
         cursor = db_conn.execute(sql, args)
         rows = cursor.fetchall()
         cursor and cursor.close()
@@ -81,7 +81,7 @@ class Endpoint(object):
         holders = ["%s" for x in ids]
         placeholder = ",".join(holders)
         args = ids + [deadline, ]
-
+        # TODO: 改成api调用，增加falcon-api功能
         cursor = db_conn.execute(
             '''select id, endpoint, ts from endpoint where id in (''' + placeholder + ''') and ts > %s''', args)
         rows = cursor.fetchall()

@@ -86,9 +86,7 @@ def alarm_dash_case_event_delete():
         ret['msg'] = "no case ids"
         return json.dumps(ret)
 
-    holders = []
-    for x in ids:
-        holders.append("%s")
+    holders = ["%s" for x in ids]
     placeholder = ','.join(holders)
 
     where = 'id in (' + placeholder + ')'

@@ -79,7 +79,7 @@ def cluster_node_post(group_id):
 
 
 @app.route('/cluster/edit/<cluster_id>', methods=['GET'])
-def cluster_edit_get(cluster_id):
+def cluster_edit_get(cluster_id):  # pylint disable=W0612
     cluster_id = int(cluster_id)
     cluster = Cluster.get(cluster_id)
     op = gettext('edit')

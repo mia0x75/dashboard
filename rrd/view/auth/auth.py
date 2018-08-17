@@ -32,7 +32,7 @@ def auth_login():
 
         name = request.form.get("name")
         password = request.form.get("password")
-        ldap = request.form.get("ldap") or "0"
+        #ldap = request.form.get("ldap") or "0"
 
         if not name or not password:
             ret["msg"] = "no name or password"

@@ -27,6 +27,7 @@ class EndpointCounter(object):
         holders = ["%s" for x in endpoint_ids]
         placeholder = ",".join(holders)
 
+        # TODO: 改成api调用，增加falcon-api功能
         args = endpoint_ids
         for q in qs:
             args.append("%" + q + "%")
@@ -52,7 +53,7 @@ class EndpointCounter(object):
         holders = ["%s" for x in endpoint_ids]
         placeholder = ",".join(holders)
         args = endpoint_ids + [start, limit]
-
+        # TODO: 改成api调用，增加falcon-api功能
         cursor = db_conn.execute(
             '''select id, endpoint_id, counter, step, type from endpoint_counter where endpoint_id in (''' +
             placeholder + ''') limit %s, %s''',
@@ -70,7 +71,7 @@ class EndpointCounter(object):
         holders = ["%s" for x in ids]
         placeholder = ",".join(holders)
         args = ids + [start, limit]
-
+        # TODO: 改成api调用，增加falcon-api功能
         cursor = db_conn.execute(
             '''select id, endpoint, ts from endpoint where id in (''' + placeholder + ''') and ts > %s''', args)
         rows = cursor.fetchall()

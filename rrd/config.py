@@ -4,8 +4,7 @@
 import os
 LOG_LEVEL = os.environ.get("LOG_LEVEL", 'WARNING')
 SECRET_KEY = os.environ.get("SECRET_KEY", "secret-key")
-PERMANENT_SESSION_LIFETIME = os.environ.get(
-    "PERMANENT_SESSION_LIFETIME", 3600 * 24 * 30)
+PERMANENT_SESSION_LIFETIME = os.environ.get("PERMANENT_SESSION_LIFETIME", 3600 * 24 * 30)
 SITE_COOKIE = os.environ.get("SITE_COOKIE", "open-falcon-ck")
 
 # Falcon+ API
